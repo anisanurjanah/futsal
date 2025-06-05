@@ -133,6 +133,7 @@
                                 </p>
                             </a>
                         </li>
+                        
                         <?php if(session()->get('id_role') == '1'): ?>
                             <li class="nav-header">Admin</li>
                                 <li class="nav-item">
@@ -156,7 +157,7 @@
                                     class="nav-link <?php echo e(request()->is('member/index') ? 'active' : ''); ?>">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
-                                        Member
+                                        Pelanggan
                                     </p>
                                 </a>
                             </li>

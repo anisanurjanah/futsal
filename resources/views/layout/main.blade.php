@@ -132,7 +132,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a href="{{ url('pembayaran/index') }}"
                                 class="nav-link {{ request()->is('pembayaran/index') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
@@ -140,7 +140,7 @@
                                     Pembayaran
                                 </p>
                             </a>
-                        </li>
+                        </li> --}}
                         @if (session()->get('id_role') == '1')
                             <li class="nav-header">Admin</li>
                                 <li class="nav-item">
@@ -164,7 +164,7 @@
                                     class="nav-link {{ request()->is('member/index') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
-                                        Member
+                                        Pelanggan
                                     </p>
                                 </a>
                             </li>
