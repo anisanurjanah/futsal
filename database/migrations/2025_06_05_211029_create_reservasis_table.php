@@ -24,8 +24,8 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
             $table->date('tanggal');
-            $table->timestamp('waktu_mulai');
-            $table->timestamp('waktu_selesai');
+            $table->time('waktu_mulai');
+            $table->time('waktu_selesai');
             $table->string('status')->default('Ditunda');
             $table->timestamps();
         });

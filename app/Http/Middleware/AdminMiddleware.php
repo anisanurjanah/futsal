@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
@@ -15,11 +16,11 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!session('berhasil_login')) {
-            if (session('id_role') != 1) {
-                return redirect('/')->with('gagal', 'Gagal');
-            }
+        if (!Auth::guard('web')->check()) {
+            return redirect("/login")
+                ->with('error', 'Anda harus masuk terlebih dahulu.');
         }
+        
         return $next($request);
     }
 }

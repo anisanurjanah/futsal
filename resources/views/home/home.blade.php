@@ -188,12 +188,12 @@
                 events: [
                     @foreach ($data as $item)
                         {
-                            title: '{{ $item->namalapangan }}',
-                            start: new Date('{{ $item->tanggal }}T{{ $item->waktu_mulai }}'),
-                            end: new Date('{{ $item->tanggal }}T{{ $item->waktu_selesai }}'),
+                            title: '{{ $item->lapangan->name }}',
+                            start: new Date('{{ \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_mulai)->format('Y-m-d\TH:i:s') }}'),
+                            end: new Date('{{ \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai)->format('Y-m-d\TH:i:s') }}'),
                             backgroundColor: '#3c8dbc', //Primary (light-blue)
                             borderColor: '#3c8dbc'
-                        },
+                        }@if (!$loop->last),@endif
                     @endforeach
                 ],
                 editable: true,

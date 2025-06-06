@@ -181,12 +181,12 @@
                 events: [
                     <?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         {
-                            title: '<?php echo e($item->namalapangan); ?>',
-                            start: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_mulai); ?>'),
-                            end: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_selesai); ?>'),
+                            title: '<?php echo e($item->lapangan->name); ?>',
+                            start: new Date('<?php echo e(\Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_mulai)->format('Y-m-d\TH:i:s')); ?>'),
+                            end: new Date('<?php echo e(\Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai)->format('Y-m-d\TH:i:s')); ?>'),
                             backgroundColor: '#3c8dbc', //Primary (light-blue)
                             borderColor: '#3c8dbc'
-                        },
+                        }<?php if(!$loop->last): ?>,<?php endif; ?>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 ],
                 editable: true,

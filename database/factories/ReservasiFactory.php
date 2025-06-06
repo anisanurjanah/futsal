@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,12 +17,19 @@ class ReservasiFactory extends Factory
      */
     public function definition()
     {
+        $baseTime = Carbon::now()->addDays(mt_rand(0, 5));
+        $startTime = clone $baseTime;
+        $startTime->addHours(mt_rand(1, 5));
+
+        $endTime = clone $startTime;
+        $endTime->addHours(mt_rand(1, 2));
+
         return [
             'pelanggan_id' => mt_rand(1, 10),
-            'lapangan_id' => mt_rand(1, 10),
-            'tanggal' => now()->toDateString(),
-            'waktu_mulai' => now()->addHours(mt_rand(1, 5))->toTimeString(),
-            'waktu_selesai' => now()->addHours(mt_rand(1, 5))->toTimeString(),
+            'lapangan_id' => mt_rand(1, 3),
+            'tanggal' => $startTime->toDateString(),
+            'waktu_mulai' => $startTime->toTimeString(),
+            'waktu_selesai' => $endTime->toTimeString(),
             'status' => fake()->randomElement(['Ditunda', 'Dibatalkan', 'Selesai', 'Berlangsung']),
         ];
     }

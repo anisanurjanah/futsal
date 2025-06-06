@@ -2,11 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lapangan;
+use App\Models\Reservasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+    public function index()
+    {
+        $lapangan = Lapangan::findorFail(1);
+        $data = Reservasi::with('lapangan')
+            ->where('status', 'Lunas')
+            ->get();
+
+        return view('home.home', compact('data'));
+    }
+
     public function showHome()
     {
         // $data = DB::table('tbl_reservasi')->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')->where('status', '=', 'Lunas')->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')->get();

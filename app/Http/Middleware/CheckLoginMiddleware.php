@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class CheckLoginMiddleware
 {
@@ -13,11 +14,14 @@ class CheckLoginMiddleware
      * @param  \Closure  $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if(!session('berhasil_login')){
-            return redirect('/')->with("akses", "Gagal");
+        $user = Auth::guard('web')->user();
+
+        if (!in_array($user->role, $roles)) {
+            abort(403, 'Kamu tidak memiliki akses.');
         }
+
         return $next($request);
     }
 }
