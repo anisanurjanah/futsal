@@ -82,8 +82,18 @@
                 <div class="col-md">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <!-- THE CALENDAR -->
-                            <div id="calendar"></div>
+                            <div class="col-md-6">
+                                <select id="selectLapangan" class="form-control">
+                                    <option value="">Pilih Lapangan</option>
+                                    @foreach ($lapangan as $lap)
+                                        <option value="{{ $lap->id }}">{{ $lap->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 mt-3">
+                                <!-- THE CALENDAR -->
+                                <div id="calendar" class="d-none"></div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -111,16 +121,16 @@
         </div>
 
     </div>
-    </div>
+</div>
 @endsection
 
 
 @section('script')
     <script>
-        $(function() {
-
+    
+        $(function () {
             /* initialize the external events
-             -----------------------------------------------------------------*/
+                -----------------------------------------------------------------*/
             function ini_events(ele) {
                 ele.each(function() {
 
@@ -144,9 +154,9 @@
             }
 
             ini_events($('#external-events div.external-event'))
-
+            
             /* initialize the calendar
-             -----------------------------------------------------------------*/
+            -----------------------------------------------------------------*/
             //Date for the calendar events (dummy data)
             var date = new Date()
             var d = date.getDate(),
@@ -159,7 +169,7 @@
             // var containerEl = document.getElementById('external-events');
             var checkbox = document.getElementById('drop-remove');
             var calendarEl = document.getElementById('calendar');
-
+            
             // initialize the external events
             // -----------------------------------------------------------------
 
@@ -177,7 +187,21 @@
             //     }
             // });
 
-            var calendar = new Calendar(calendarEl, {
+            const allEvents = [
+                @foreach ($data as $item)
+                    {
+                        lapangan_id: '{{ $item->lapangan_id }}',
+                        title: '{{ $item->lapangan->name }}',
+                        start: '{{ \Carbon\Carbon::parse($item->tanggal . " " . $item->waktu_mulai)->format("Y-m-d\TH:i:s") }}',
+                        end: '{{ \Carbon\Carbon::parse($item->tanggal . " " . $item->waktu_selesai)->format("Y-m-d\TH:i:s") }}',
+                        backgroundColor: '#3c8dbc', //Primary (light-blue)
+                        borderColor: '#3c8dbc'
+                    }@if (!$loop->last),@endif
+                @endforeach
+            ];
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'id',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -185,31 +209,42 @@
                 },
                 themeSystem: 'bootstrap',
                 //Random default events
-                events: [
-                    @foreach ($data as $item)
-                        {
-                            title: '{{ $item->lapangan->name }}',
-                            start: new Date('{{ \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_mulai)->format('Y-m-d\TH:i:s') }}'),
-                            end: new Date('{{ \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu_selesai)->format('Y-m-d\TH:i:s') }}'),
-                            backgroundColor: '#3c8dbc', //Primary (light-blue)
-                            borderColor: '#3c8dbc'
-                        }@if (!$loop->last),@endif
-                    @endforeach
-                ],
+                events: [],
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 drop: function(info) {
                     // is the "remove after drop" checkbox checked?
-                    if (checkbox.checked) {
+                    if (checkbox && checkbox.checked) {
                         // if so, remove the element from the "Draggable Events" list
                         info.draggedEl.parentNode.removeChild(info.draggedEl);
                     }
+                },
+                dateClick: function(info) {
+                    sessionStorage.setItem('tanggalReservasi', info.dateStr);
+                    window.location.href = '/reservasi';
                 }
             });
 
             calendar.render();
             // $('#calendar').fullCalendar()
 
+            $('#selectLapangan').on('change', function() {
+                const lapanganId = $(this).val();
+                if (!lapanganId) {
+                    $('#calendar').addClass('d-none');
+                    return;
+                }
+
+                $('#calendar').removeClass('d-none').fadeIn(300, function() {
+                    calendar.render();
+                });
+
+                calendar.removeAllEvents();
+
+                const filteredEvents = allEvents.filter(e => e.lapangan_id === lapanganId);
+                filteredEvents.forEach(e => calendar.addEvent(e));
+            })
+                
             /* ADDING EVENTS */
             var currColor = '#3c8dbc' //Red by default
             // Color chooser button

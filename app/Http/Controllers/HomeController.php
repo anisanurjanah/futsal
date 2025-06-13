@@ -11,32 +11,42 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $lapangan = Lapangan::findorFail(1);
+        $lapangan = Lapangan::all();
         $data = Reservasi::with('lapangan')
-            ->where('status', 'Lunas')
+            ->where('status', 'Ditunda')
             ->get();
 
-        return view('home.home', compact('data'));
+        return view('home.home', [
+            'data' => $data,
+            'lapangan' => $lapangan
+        ]);
     }
 
-    public function showHome()
-    {
-        // $data = DB::table('tbl_reservasi')->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')->where('status', '=', 'Lunas')->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')->get();
-        $data = DB::table('tbl_reservasi')
-            ->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')
-            ->where('status', '=', 'Lunas')
-            ->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')
-            ->get();
+    // public function showHome()
+    // {
+    //     // $data = DB::table('tbl_reservasi')->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')->where('status', '=', 'Lunas')->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')->get();
+    //     $data = DB::table('tbl_reservasi')
+    //         ->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')
+    //         ->where('status', '=', 'Lunas')
+    //         ->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')
+    //         ->get();
 
-        return view('home.home', compact('data'));
-    }
+    //     return view('home.home', compact('data'));
+    // }
 
     public function showReservasi()
     {
-        $tipeLapangan = DB::table('tbl_lapangan')->get();
-
-        return view('home.reservasi', compact('tipeLapangan'));
+        return view('home.reservasi', [
+            'lapangan' => Lapangan::all()
+        ]);
     }
+
+    // public function showReservasi()
+    // {
+    //     $tipeLapangan = DB::table('tbl_lapangan')->get();
+
+    //     return view('home.reservasi', compact('tipeLapangan'));
+    // }
 
     public function addReservasi(Request $request)
     {
