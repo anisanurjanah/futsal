@@ -27,6 +27,9 @@ return new class extends Migration
             $table->time('waktu_mulai');
             $table->time('waktu_selesai');
             $table->string('status')->default('Ditunda');
+            $table->string('order_id')->unique()->nullable();
+            $table->string('snap_token')->nullable();
+            $table->integer('total_harga')->nullable();
             $table->timestamps();
         });
     }

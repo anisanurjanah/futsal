@@ -23,7 +23,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'index'])->middleware('guest')->name('home');
 
 Route::get('/reservasi', 'HomeController@showReservasi')->name('reservasi');
-Route::post('/reservasi/add', 'HomeController@addReservasi')->name('reservasi/add');
+Route::get('/reservasi/success', 'HomeController@showDetailReservasi')->name('detail_reservasi');
+Route::post('/reservasi/add', 'HomeController@storeReservasi')->name('reservasi/add');
+
+Route::post('/cek-jadwal', [HomeController::class, 'getAvailableWaktu']);
 
 // Route::get('/login', function () {
 //     return view('auth.login');

@@ -27,7 +27,8 @@ class Pembayaran extends Model
     }
 
     const STATUS_PEMBAYARAN = [
-        'Dibayar' => 'Dibayar',
+        'Lunas' => 'Lunas',
+        'Belum Lunas' => 'Belum Lunas',
         'Ditunda' => 'Ditunda',
         'Gagal' => 'Gagal',
     ];

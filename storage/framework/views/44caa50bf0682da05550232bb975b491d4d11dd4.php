@@ -1,6 +1,6 @@
 
 
-<?php $__env->startSection('title', 'Home'); ?>
+<?php $__env->startSection('title', 'Reservasi'); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="container-fluid">
@@ -19,7 +19,7 @@
                                 <div class="d-flex gap-3">
                                     <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="tipe_lapangan"
+                                            <input class="form-check-input" type="radio" name="lapangan_id"
                                                 id="lapangan<?php echo e($item->id); ?>" value="<?php echo e($item->id); ?>"
                                                 data-harga="<?php echo e($item->price); ?>" required>
                                             <label class="form-check-label" for="lapangan<?php echo e($item->id); ?>">
@@ -35,10 +35,15 @@
                                 <label for="nama">Nama</label>
                                 <input type="text" class="form-control" id="nama" name="nama" required>
                             </div>
-
+                            
                             <div class="form-group mb-3">
                                 <label for="nomor_telepon">Nomor Telepon</label>
                                 <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" required>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
                             </div>
 
                             <div class="form-group mb-3">
@@ -78,21 +83,21 @@
                                 <label class="d-block">Metode Pembayaran</label>
                                 <div class="d-flex flex-wrap gap-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="payment_method"
+                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
                                             id="payment_bank" value="bank_transfer" required>
                                         <label class="form-check-label" for="payment_bank">
                                             Bank Transfer
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="payment_method"
+                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
                                             id="payment_gopay" value="gopay" required>
                                         <label class="form-check-label" for="payment_gopay">
                                             GoPay
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="payment_method"
+                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
                                             id="payment_qris" value="qris" required>
                                         <label class="form-check-label" for="payment_qris">
                                             QRIS
@@ -117,6 +122,13 @@
             const waktuMulai = document.getElementById('waktu_mulai');
             const waktuSelesai = document.getElementById('waktu_selesai');
             const waktuError = document.getElementById('waktuError');
+            const tanggalInput = document.getElementById('tanggal');
+            const lapanganInputs = document.querySelectorAll('input[name="lapangan_id"]');
+
+            // Setelah semua element diambil
+            if (tanggalInput.value && document.querySelector('input[name="lapangan_id"]:checked')) {
+                fetchAvailableTimes();
+            }
 
             // Fungsi untuk memfilter opsi waktu selesai
             function filterWaktuSelesai() {
@@ -161,17 +173,89 @@
                 return true;
             }
 
-            // Event listener untuk waktu mulai
-            waktuMulai.addEventListener('change', function() {
-                filterWaktuSelesai();
+            // Validasi metode pembayaran
+            function validatePaymentMethod() {
+                const selected = document.querySelector('input[name="metode_pembayaran"]:checked');
+                if (!selected) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Metode Pembayaran Belum Dipilih',
+                        text: 'Silakan pilih salah satu metode pembayaran terlebih dahulu.',
+                    });
+                    return false;
+                }
+                return true;
+            }
+
+            // Fungsi untuk ambil jam yang tersedia via AJAX
+            function fetchAvailableTimes() {
+                const tanggal = tanggalInput.value;
+                const lapanganId = document.querySelector('input[name="lapangan_id"]:checked')?.value;
+
+                if (!tanggal || !lapanganId) return;
+                
+                fetch('<?php echo e(url("/cek-jadwal")); ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '<?php echo e(csrf_token()); ?>'
+                    },
+                    body: JSON.stringify({
+                        tanggal: tanggal,
+                        lapangan_id: lapanganId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Available times:', data);
+
+                    waktuMulai.innerHTML = '<option value="">Pilih Waktu Mulai</option>';
+                    waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
+
+                    data.forEach(jam => {
+                        const option = document.createElement('option');
+                        option.value = jam;
+                        option.textContent = jam.substring(0, 5);
+                        waktuMulai.appendChild(option);
+                    });
+
+                    waktuMulai.addEventListener('change', function() {
+                        const selectedHour = parseInt(this.value.split(':')[0]);
+                        waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
+
+                        for (let i = selectedHour + 1; i <= 21; i++) {
+                            const jam = `${i.toString().padStart(2, '0')}:00:00`;
+                            const option = document.createElement('option');
+                            option.value = jam;
+                            option.textContent = jam.substring(0, 5);
+                            waktuSelesai.appendChild(option);
+                        }
+                    })
+                })
+                .catch(error => {
+                    console.error('Gagal ambil jadwal:', error);
+                });
+            }
+
+            tanggalInput.addEventListener('change', fetchAvailableTimes);
+            lapanganInputs.forEach(input => {
+                input.addEventListener('change', fetchAvailableTimes);
             });
+
+            // Event listener untuk waktu mulai
+            // waktuMulai.addEventListener('change', function() {
+            //     filterWaktuSelesai();
+            // });
 
             // Event listener untuk waktu selesai
             waktuSelesai.addEventListener('change', validateTime);
 
             // Event listener untuk form submission
             form.addEventListener('submit', function(e) {
-                if (!validateTime()) {
+                const validTime = validateTime();
+                const validPayment = validatePaymentMethod();
+
+                if (!validTime || !validPayment) {
                     e.preventDefault();
                 } else {
                     sessionStorage.removeItem('tanggalReservasi');
@@ -183,9 +267,6 @@
     <script>
         const tanggal = sessionStorage.getItem('tanggalReservasi');
         const lapanganId = sessionStorage.getItem('lapanganId');
-
-        console.log("Tanggal:", tanggal);
-        console.log("Lapangan ID:", lapanganId);
 
         if (tanggal) {
             $('#tanggal').val(tanggal);
