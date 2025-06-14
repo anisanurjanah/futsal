@@ -13,17 +13,17 @@
                     <div class="card-body">
                         <form action="<?php echo e(route('reservasi/add')); ?>" method="POST" id="reservasiForm">
                             <?php echo csrf_field(); ?>
-                            <input type="hidden" name="id_user" value="<?php echo e(session()->get('id_user')); ?>">
+                            
                             <div class="form-group mb-3">
                                 <label class="d-block">Tipe Lapangan</label>
                                 <div class="d-flex gap-3">
-                                    <?php $__currentLoopData = $tipeLapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="tipe_lapangan"
                                                 id="lapangan<?php echo e($item->id); ?>" value="<?php echo e($item->id); ?>"
-                                                data-harga="<?php echo e($item->hargaperjam); ?>" required>
+                                                data-harga="<?php echo e($item->price); ?>" required>
                                             <label class="form-check-label" for="lapangan<?php echo e($item->id); ?>">
-                                                <?php echo e($item->namalapangan); ?>
+                                                <?php echo e($item->name); ?>
 
                                             </label>
                                         </div>
@@ -72,6 +72,33 @@
                                         <?php endif; ?>
                                     <?php endfor; ?>
                                 </select>
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label class="d-block">Metode Pembayaran</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_method"
+                                            id="payment_bank" value="bank_transfer" required>
+                                        <label class="form-check-label" for="payment_bank">
+                                            Bank Transfer
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_method"
+                                            id="payment_gopay" value="gopay" required>
+                                        <label class="form-check-label" for="payment_gopay">
+                                            GoPay
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_method"
+                                            id="payment_qris" value="qris" required>
+                                        <label class="form-check-label" for="payment_qris">
+                                            QRIS
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Buat Reservasi</button>
@@ -146,9 +173,27 @@
             form.addEventListener('submit', function(e) {
                 if (!validateTime()) {
                     e.preventDefault();
+                } else {
+                    sessionStorage.removeItem('tanggalReservasi');
+                    sessionStorage.removeItem('lapanganId');
                 }
             });
         });
+    </script>
+    <script>
+        const tanggal = sessionStorage.getItem('tanggalReservasi');
+        const lapanganId = sessionStorage.getItem('lapanganId');
+
+        console.log("Tanggal:", tanggal);
+        console.log("Lapangan ID:", lapanganId);
+
+        if (tanggal) {
+            $('#tanggal').val(tanggal);
+        }
+
+        if (lapanganId) {
+            $(`#lapangan${lapanganId}`).prop('checked', true);
+        }
     </script>
     <script>
         <?php if(session('add_gagal')): ?>

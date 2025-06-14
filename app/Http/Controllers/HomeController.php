@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Midtrans\Config;
 use App\Models\Lapangan;
 use App\Models\Reservasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = config('midtrans.sanitized');
+        Config::$is3ds = config('midtrans.3ds');
+    }
+
     public function index()
     {
         $lapangan = Lapangan::all();
@@ -48,6 +58,11 @@ class HomeController extends Controller
     //     return view('home.reservasi', compact('tipeLapangan'));
     // }
 
+    public function storeReservasi()
+    {
+        
+    }
+
     public function addReservasi(Request $request)
     {
 
@@ -83,8 +98,6 @@ class HomeController extends Controller
             'nama' => $request->nama,
             'no_telepon' => $request->nomor_telepon,
         ]);
-
-
 
         DB::table('tbl_reservasi')->insert([
             'id_pelanggan' => $dataPelanggan,

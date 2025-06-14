@@ -7,6 +7,7 @@ use App\Models\Reservasi;
 use App\Models\Pembayaran;
 use Illuminate\Database\Seeder;
 use App\Models\PembayaranDetail;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -60,10 +61,16 @@ class DatabaseSeeder extends Seeder
         //     ]);
         // });
 
-        Pembayaran::all()->each(function ($pembayaran) {
-            PembayaranDetail::factory()->create([
-                'pembayaran_id' => $pembayaran->id,
-            ]);
-        });
+        // Pembayaran::all()->each(function ($pembayaran) {
+        //     PembayaranDetail::factory()->create([
+        //         'pembayaran_id' => $pembayaran->id,
+        //     ]);
+        // });
+
+        // DB::table('metode_pembayarans')->insert([
+        //     ['name' => 'Bank Transfer', 'code' => 'bank_transfer'],
+        //     ['name' => 'Gopay', 'code' => 'gopay'],
+        //     ['name' => 'QRIS', 'code' => 'qris'],
+        // ]);
     }
 }

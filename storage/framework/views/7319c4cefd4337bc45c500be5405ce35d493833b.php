@@ -211,6 +211,14 @@
                         // if so, remove the element from the "Draggable Events" list
                         info.draggedEl.parentNode.removeChild(info.draggedEl);
                     }
+                },
+                dateClick: function(info) {
+                    const lapanganId = $('#selectLapangan').val();
+
+                    sessionStorage.setItem('tanggalReservasi', info.dateStr);
+                    sessionStorage.setItem('lapanganId', lapanganId);
+                    
+                    window.location.href = '/reservasi';
                 }
             });
 
