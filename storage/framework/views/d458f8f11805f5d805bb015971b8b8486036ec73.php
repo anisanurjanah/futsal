@@ -1,8 +1,6 @@
-@extends('layout.main')
+<?php $__env->startSection('title', 'User'); ?>
 
-@section('title', 'User')
-
-@section('breadcrums')
+<?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-6">
             <h1>User</h1>
@@ -10,9 +8,10 @@
         <div class="col-sm-6">
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
+
     <div class="row">
 
         <div class="col-md-12">
@@ -21,12 +20,12 @@
                     <div class="row">
                         <div class="col">
                             <div class="ml-auto">
-                                <h5>Tambah Data</h5>
+                                <h5>Edit Data</h5>
                             </div>
                         </div>
                         <div class="col mr-auto">
                             <div class="mr-auto float-right">
-                                <a href="{{ url('/dashboard/pengguna') }}" class="btn btn-default">
+                                <a href="<?php echo e(url('/dashboard/pengguna')); ?>" class="btn btn-default">
                                     << Go Back to List </a>
                             </div>
                         </div>
@@ -34,19 +33,21 @@
                 </div>
                 <div class="card-body">
 
-                    <form action="{{ url('/dashboard/pengguna') }}" method="post">
-                        @csrf
+                    <form action="<?php echo e(url('/dashboard/pengguna/' . $row->id)); ?>" method="post">
+                        <?php echo csrf_field(); ?>
                         <div class="row">
                             <div class="col-md-4"></div>
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
+                                    <input type="hidden" name="id" value="<?php echo e($row->id); ?>">
                                     <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
-                                        required>
+                                        value="<?php echo e($row->name); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
-                                    <input type="email" class="form-control" name="email" id="email" required>
+                                    <input type="email" class="form-control" name="email" id="email"
+                                        value="<?php echo e($row->email); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Password</label>
@@ -54,23 +55,19 @@
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Jenis Kelamin</label>
-                                    <select name="id_gender" id="id_gender" class="form-control" required>
-                                        <option value="1">Pria</option>
-                                        <option value="2">Wanita</option>
-                                    </select>
-                                </div>                                
-                                <div class="form-group">
                                     <label>User Grup</label>
                                     <select name="id_role" id="id_role" class="form-control" required>
-                                        @foreach ($role as $key => $value)
-                                            <option value="{{ $key }}">{{ $value }}</option>
-                                        @endforeach
+                                        <?php $__currentLoopData = $role; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($key); ?>" <?php echo e(strtolower($row->role) == strtolower($key) ? 'selected' : ''); ?>>
+                                                <?php echo e($value); ?>
+
+                                            </option>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <button type="submit" class="btn btn-primary">Simpan</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                             <div class="col-md-4"></div>
@@ -83,8 +80,13 @@
 
     </div>
 
-@endsection
 
-@section('script')
+<?php $__env->stopSection(); ?>
 
-@endsection
+<?php $__env->startSection('script'); ?>
+
+    <script></script>
+
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.main', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\futsal\resources\views/pengguna/edit.blade.php ENDPATH**/ ?>

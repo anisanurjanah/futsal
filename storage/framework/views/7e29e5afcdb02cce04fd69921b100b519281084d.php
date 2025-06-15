@@ -1,9 +1,9 @@
-<?php $__env->startSection('title', 'Member'); ?>
+<?php $__env->startSection('title', 'Pelanggan'); ?>
 
 <?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h1>Member</h1>
+            <h1>Pelanggan</h1>
         </div>
         <div class="col-sm-6">
         </div>
@@ -13,14 +13,14 @@
 <?php $__env->startSection('content'); ?>
     <div class="card">
         <div class="card-header">
-            <a href="<?php echo e(url('member/add')); ?>" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="<?php echo e(url('/dashboard/pelanggan/create')); ?>" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
         </div>
         <div class="card-body">
             <table id="tabelmember" class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th width="20px">No</th>
-                        <th>NAMA MEMBER</th>
+                        <th>NAMA PELANGGAN</th>
                         <th>NO TELEPON</th>
                         <th class="text-center">AKSI</th>
                     </tr>
@@ -29,10 +29,11 @@
                     <?php $__currentLoopData = $data; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
                             <td class="text-center"><?php echo e($loop->iteration); ?></td>
-                            <td><?php echo e($item->nama); ?></td>
-                            <td><?php echo e($item->no_telepon); ?></td>
+                            <td><?php echo e($item->name); ?></td>
+                            <td><?php echo e($item->email); ?></td>
+                            <td><?php echo e($item->phone); ?></td>
                             <td class="text-center">
-                                <a href="<?php echo e(url('member/edit/' . $item->id)); ?>" class="btn btn-xs btn-warning"
+                                <a href="<?php echo e(url('/dashboard/pelanggan/' . $item->id . '/edit')); ?>" class="btn btn-xs btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i> </a>
                                 <button onclick="del(<?php echo e($item->id); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i
                                         class="fas fa-trash"></i> </button>
@@ -108,7 +109,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?php echo e(url('member/member/delete')); ?>/" + id;
+                    window.location.href = "<?php echo e(url('/dashboard/pelanggan')); ?>/" + id;
                 }
             });
         }

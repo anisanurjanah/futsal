@@ -24,12 +24,14 @@ use App\Http\Controllers\PembayaranDetailController;
 
 Route::get('/', [HomeController::class, 'index'])->middleware('guest')->name('home');
 
-Route::get('/reservasi', 'HomeController@showReservasi')->name('reservasi');
-Route::get('/reservasi/success', 'HomeController@showDetailReservasi')->name('detail_reservasi');
-Route::post('/reservasi/add', 'HomeController@storeReservasi')->name('reservasi/add');
+Route::get('/reservasi', [HomeController::class, 'showReservasi'])->name('reservasi');
+Route::get('/reservasi/success', [HomeController::class, 'showDetailReservasi'])->name('detail_reservasi');
+Route::post('/reservasi/add', [HomeController::class, 'storeReservasi'])->name('reservasi/add');
 
 Route::post('/cek-jadwal', [HomeController::class, 'getAvailableWaktu']);
 
+
+// DASHBOARD
 Route::get('/login', [AuthController::class, 'index']);
 
 Route::post('login', [AuthController::class, 'login'])->name('login');

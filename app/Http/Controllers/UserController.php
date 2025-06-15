@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,7 +17,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $data = User::latest()->get();
+
+        return view('pengguna.index', ['data' => $data]);
     }
 
     /**
@@ -23,7 +29,9 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $role = User::USER_ROLES;
+
+        return view('pengguna.add', ['role' => $role]);
     }
 
     /**
@@ -34,7 +42,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('tbl_user')->insert([
+            'nama_lengkap' => $request->nama_lengkap,
+            'email' => $request->email,
+            'id_gender' => $request->id_gender,
+            'id_role' => $request->id_role,
+            'is_active' => '1',
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect('pengguna/index')->with('add_sukses', 1);
     }
 
     /**
@@ -56,7 +73,13 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $row = User::findOrFail($id);
+        $role = User::USER_ROLES;
+
+        return view('pengguna.edit', [
+            'row' => $row,
+            'role' => $role,
+        ]);
     }
 
     /**
@@ -68,7 +91,17 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::table('tbl_user')
+            ->where('id', $request->id)
+            ->update([
+                'nama_lengkap' => $request->nama_lengkap,
+                'email' => $request->email,
+                'id_gender' => $request->id_gender,
+                'id_role' => $request->id_role,
+                'password' => Hash::make($request->password),
+            ]);
+
+        return redirect('pengguna/index')->with('edit_sukses', 1);
     }
 
     /**
@@ -79,6 +112,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('tbl_user')->where('id', $id)->delete();
+        return redirect()->back()->with('delete_sukses', 1);
     }
 }

@@ -27,7 +27,7 @@
                         </div>
                         <div class="col mr-auto">
                             <div class="mr-auto float-right">
-                                <a href="{{ url('pengguna/index') }}" class="btn btn-default">
+                                <a href="{{ url('/dashboard/pengguna') }}" class="btn btn-default">
                                     << Go Back to List </a>
                             </div>
                         </div>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="card-body">
 
-                    <form action="{{ url('pengguna/edit') }}" method="post">
+                    <form action="{{ url('/dashboard/pengguna/' . $row->id) }}" method="post">
                         @csrf
                         <div class="row">
                             <div class="col-md-4"></div>
@@ -44,7 +44,7 @@
                                     <label>Nama Lengkap</label>
                                     <input type="hidden" name="id" value="{{ $row->id }}">
                                     <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
-                                        value="{{ $row->nama_lengkap }}" required>
+                                        value="{{ $row->name }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
@@ -57,23 +57,11 @@
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Jenis Kelamin</label>
-                                    <select name="id_gender" id="id_gender" class="form-control">
-                                        <option value="1"
-                                            {{ old('id_gender', $row->id_gender) == 1 ? 'selected' : '' }}>
-                                            Pria</option>
-                                        <option value="2"
-                                            {{ old('id_gender', $row->id_gender) == 2 ? 'selected' : '' }}>
-                                            Wanita
-                                        </option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
                                     <label>User Grup</label>
-                                    <select name="id_role" id="id_role" class="form-control">
-                                        @foreach ($role as $dt)
-                                            <option value="{{ $dt->id }}"
-                                                {{ $row->id_role == $dt->id ? 'selected' : null }}>{{ $dt->nama_role }}
+                                    <select name="id_role" id="id_role" class="form-control" required>
+                                        @foreach ($role as $key => $value)
+                                            <option value="{{ $key }}" {{ strtolower($row->role) == strtolower($key) ? 'selected' : '' }}>
+                                                {{ $value }}
                                             </option>
                                         @endforeach
                                     </select>

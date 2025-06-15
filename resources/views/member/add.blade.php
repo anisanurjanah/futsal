@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Member')
+@section('title', 'Pelanggan')
 
 @section('breadcrums')
     <div class="row mb-2">
@@ -15,13 +15,13 @@
 @section('content')
     <div class="row">
         <div class="col-md-6">
-            <form action="{{ url('member/add') }}" method="post">
+            <form action="{{ url('/dashboard/pelanggan') }}" method="post">
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
                                 <div class="ml-auto">
-                                    <a href="{{ url('member/index') }}" class="btn btn-default">
+                                    <a href="{{ url('/dashboard/pelanggan') }}" class="btn btn-default">
                                         <i class="fas fa fa-reply"></i> Kembali </a>
                                 </div>
                             </div>
@@ -35,6 +35,11 @@
                                 <div class="form-group">
                                     <label>NAMA</label>
                                     <input type="text" class="form-control" name="nama" id="nama"
+                                        autocomplete="off" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>EMAIL</label>
+                                    <input type="email" class="form-control" name="email" id="email"
                                         autocomplete="off" required>
                                 </div>
                                 <div class="form-group">

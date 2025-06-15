@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lapangan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -9,10 +10,17 @@ class LapanganController extends Controller
 {
     public function index()
     {
-        $data = DB::table('tbl_lapangan')->get();
+        $data = Lapangan::all();
 
         return view('lapangan.index', ['data' => $data]);
     }
+
+    // public function index()
+    // {
+    //     $data = DB::table('tbl_lapangan')->get();
+
+    //     return view('lapangan.index', ['data' => $data]);
+    // }
 
     public function create()
     {
@@ -33,12 +41,21 @@ class LapanganController extends Controller
 
     public function edit($id)
     {
-        $row = DB::table('tbl_lapangan')->where('tbl_lapangan.id', $id)->first();
+        $row = Lapangan::findOrFail($id);
 
         return view('lapangan.edit', [
             'row' => $row,
         ]);
     }
+
+    // public function edit($id)
+    // {
+    //     $row = DB::table('tbl_lapangan')->where('tbl_lapangan.id', $id)->first();
+
+    //     return view('lapangan.edit', [
+    //         'row' => $row,
+    //     ]);
+    // }
 
     public function update(Request $request)
     {

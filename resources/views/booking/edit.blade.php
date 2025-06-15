@@ -15,14 +15,14 @@
 @section('content')
     <div class="row">
         <div class="col-md">
-            <form action="{{ route('booking/update') }}" method="POST" id="reservasiForm">
+            <form action="{{ route('/dashboard/reservasi' . $reservasiId) }}" method="POST" id="reservasiForm">
                 @csrf
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
                                 <div class="ml-auto">
-                                    <a href="{{ url('booking/index') }}" class="btn btn-default">
+                                    <a href="{{ url('/dashboard/reservasi') }}" class="btn btn-default">
                                         <i class="fas fa fa-reply"></i> Kembali </a>
                                 </div>
                             </div>

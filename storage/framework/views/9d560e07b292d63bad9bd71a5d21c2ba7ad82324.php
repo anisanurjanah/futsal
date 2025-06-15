@@ -5,7 +5,7 @@
 <?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-6">
-            <h1>Tambah Lapangan</h1>
+            <h1>Edit Lapangan</h1>
         </div>
         <div class="col-sm-6">
         </div>
@@ -15,7 +15,7 @@
 <?php $__env->startSection('content'); ?>
     <div class="row">
         <div class="col-md-6">
-            <form action="<?php echo e(url('/dashboard/lapangan')); ?>" method="post">
+            <form action="<?php echo e(url('/dashboard/lapangan/' . $row->id)); ?>" method="post">
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
@@ -33,22 +33,26 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>NAMA LAPANGAN</label>
+                                    <label>NAMA lapangan</label>
                                     <input type="text" class="form-control" name="namalapangan" id="namalapangan"
-                                        autocomplete="off" required>
+                                        autocomplete="off" value="<?php echo e($row->name); ?>" required>
+                                        <input type="hidden" name="id" value="<?php echo e($row->id); ?>">
                                 </div>
                                 <div class="form-group">
                                     <label>HARGA PER JAM</label>
                                     <input type="number" class="form-control" name="hargaperjam" id="hargaperjam"
-                                        autocomplete="off" required>
+                                        autocomplete="off" value="<?php echo e($row->price); ?>" required>
                                 </div>
                             </div>
+
+
                         </div>
+
                     </div>
 
 
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>
 
@@ -60,4 +64,4 @@
 
 <?php $__env->stopSection(); ?>
 
-<?php echo $__env->make('layout.main', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\futsal\resources\views/lapangan/add.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layout.main', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\futsal\resources\views/lapangan/edit.blade.php ENDPATH**/ ?>

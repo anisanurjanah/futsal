@@ -47,7 +47,7 @@
                                 <?php endif; ?>
                             </td>
                             <td class="text-center">
-                                <a href="<?php echo e(url('booking/edit/' . $item['id'])); ?>" class="btn btn-xs btn-warning"
+                                <a href="<?php echo e(url('/dashboard/reservasi/' . $item['id']) . '/edit'); ?>" class="btn btn-xs btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i> </a>
                                 <button onclick="del(<?php echo e($item['id']); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i
                                         class="fas fa-trash"></i> </button>
@@ -123,7 +123,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?php echo e(url('booking/booking/delete')); ?>/" + id;
+                    window.location.href = "<?php echo e(url('dashboard/reservasi/delete')); ?>/" + id;
                 }
             });
         }

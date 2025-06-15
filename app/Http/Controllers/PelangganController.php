@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pelanggan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 
 class PelangganController extends Controller
 {
@@ -13,7 +16,9 @@ class PelangganController extends Controller
      */
     public function index()
     {
-        //
+        $data = Pelanggan::latest()->get();
+
+        return view('member.index', ['data' => $data]);
     }
 
     /**
@@ -23,7 +28,7 @@ class PelangganController extends Controller
      */
     public function create()
     {
-        //
+        return view('member.add');
     }
 
     /**
@@ -34,7 +39,12 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('tbl_pelanggan')->insert([
+            'nama' => $request->nama,
+            'no_telepon' => $request->no_telepon,
+        ]);
+
+        return redirect('member/index')->with('add_sukses', 1);
     }
 
     /**
@@ -56,7 +66,11 @@ class PelangganController extends Controller
      */
     public function edit($id)
     {
-        //
+        $row = Pelanggan::findOrFail($id);
+
+        return view('member.edit', [
+            'row' => $row,
+        ]);
     }
 
     /**
@@ -68,7 +82,14 @@ class PelangganController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::table('tbl_pelanggan')
+            ->where('id', $request->id)
+            ->update([
+                'nama' => $request->nama,
+                'no_telepon' => $request->no_telepon,
+            ]);
+
+        return redirect('member/index')->with('edit_sukses', 1);
     }
 
     /**
@@ -79,6 +100,7 @@ class PelangganController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('tbl_pelanggan')->where('id', $id)->delete();
+        return redirect()->back()->with('delete_sukses', 1);
     }
 }
