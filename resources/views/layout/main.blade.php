@@ -12,7 +12,6 @@
 
     <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/fontawesome-free/css/all.min.css">
 
-
     <!-- DataTables -->
     <!-- Select2 -->
     <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/select2/css/select2.min.css">

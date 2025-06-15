@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title')</title>
+    
+    <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/fontawesome-free/css/all.min.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 
@@ -29,7 +32,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container-fluid">
-                <a class="navbar-brand" href="{{ route('home') }}">Navbar</a>
+                <a class="navbar-brand" href="{{ route('home') }}">FitPlaza</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -52,9 +55,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('reservasi') }}">Reservasi Lapangan</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link" href="{{ url('login') }}">login</a>
-                        </li>
+                        </li> --}}
                     </ul>
                 </div>
             </div>

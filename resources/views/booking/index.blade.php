@@ -22,12 +22,13 @@
                 <thead>
                     <tr>
                         <th width="20px">No</th>
-                        <th class="text-center">NAMA MEMBER</th>
-                        <th class="text-center">NAMA LAPANGAN</th>
+                        <th class="text-center">NAMA PELANGGAN</th>
+                        <th class="text-center">LAPANGAN</th>
                         <th class="text-center">TANGGAL</th>
                         <th class="text-center">DURASI</th>
                         <th class="text-center">TOTAL HARGA</th>
-                        <th class="text-center">STATUS TRANSAKSI</th>
+                        <th class="text-center">STATUS</th>
+                        <th class="text-center">STATUS PEMBAYARAN</th>
                         <th class="text-center">AKSI</th>
                     </tr>
                 </thead>
@@ -41,6 +42,7 @@
                             <td class="text-center">{{ $item['durasi'] }} jam</td>
                             <td class="text-right">Rp.
                                 {{ number_format($item['durasi'] * $item['harga'], 0, ',', '.') }}</td>
+                            <td>{{ $item['status'] }}</td>
                             <td class="text-center">
                                 @if ($item['status_pembayaran'] == 'Belum Lunas')
                                     <span class="badge bg-primary">{{ $item['status_pembayaran'] }}</span>
@@ -49,10 +51,17 @@
                                 @endif
                             </td>
                             <td class="text-center">
+                                <a href="{{ url('/dashboard/reservasi/' . $item['id']) }}" class="btn btn-xs btn-primary"
+                                    title="Show"><i class="fas fa-eye"></i>
+                                </a>
                                 <a href="{{ url('/dashboard/reservasi/' . $item['id']) . '/edit' }}" class="btn btn-xs btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i> </a>
-                                <button onclick="del({{ $item['id'] }})" class="btn btn-xs btn-danger" title="Hapus"><i
-                                        class="fas fa-trash"></i> </button>
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
+                                <form id="delete-form-{{ $item['id'] }}" action="{{ url('/dashboard/reservasi/' . $item['id']) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                                <button onclick="del({{ $item['id'] }})" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -125,7 +134,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('dashboard/reservasi/delete') }}/" + id;
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }

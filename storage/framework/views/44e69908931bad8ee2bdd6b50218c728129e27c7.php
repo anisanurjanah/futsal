@@ -33,30 +33,28 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label>NAMA MEMBER</label>
-                                    <select name="idmember" id="idmember" class="form-control select2" required>
-                                        <option value="">--Pilih Member--</option>
-                                        <?php $__currentLoopData = $member; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <label>Nama Pelanggan</label>
+                                    <select name="pelanggan_id" id="pelanggan_id" class="form-control select2" required>
+                                        <option value="">--Pilih Pelanggan--</option>
+                                        <?php $__currentLoopData = $pelanggan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($dt->id); ?>"><?php echo e($dt->name); ?></option>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>NAMA LAPANGAN</label>
-                                    <select name="idlapangan" id="idlapangan" class="form-control" required>
+                                    <label>Lapangan</label>
+                                    <select name="lapangan_id" id="lapangan_id" class="form-control" required>
                                         <option value="">--Pilih Lapangan--</option>
                                         <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($dt->id); ?>"><?php echo e($dt->name); ?></option>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label for="tanggal">Tanggal</label>
                                     <input type="date" class="form-control" id="tanggal" name="tanggal" required
                                         min="<?php echo e(date('Y-m-d')); ?>">
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label for="waktu_mulai">Waktu Mulai</label>
                                     <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
@@ -70,7 +68,6 @@
                                         <?php endfor; ?>
                                     </select>
                                 </div>
-
                                 <div class="form-group mb-3">
                                     <label for="waktu_selesai">Waktu Selesai</label>
                                     <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
@@ -85,14 +82,67 @@
                                         <?php endfor; ?>
                                     </select>
                                 </div>
+                                <div class="form-group mb-3">
+                                    <label for="total_harga">Total Harga</label>
+                                    <input type="number" class="form-control" id="total_harga" name="total_harga" disabled>
+                                </div>
                                 <div class="form-group">
-                                    <label>STATUS</label>
+                                    <label>Tipe Pembayaran</label>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input" id="sts2" name="statustransaksi"
+                                        <input type="radio" class="form-check-input" id="tipe_pembayaran" name="tipe_pembayaran"
+                                            value="Down Payment">Down Payment
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="tipe_pembayaran" name="tipe_pembayaran"
+                                            value="Lunas">Lunas
+                                    </div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="jumlah_pembayaran">Jumlah Pembayaran</label>
+                                    <input type="number" class="form-control" id="jumlah_pembayaran" name="jumlah_pembayaran">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="sisa_pembayaran">Sisa Pembayaran</label>
+                                    <input type="number" class="form-control" id="sisa_pembayaran" name="sisa_pembayaran" disabled>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="total_pembayaran">Total Pembayaran</label>
+                                    <input type="number" class="form-control" id="total_pembayaran" name="total_pembayaran" disabled>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="d-block">Metode Pembayaran</label>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="metode_pembayaran"
+                                                id="payment_bank" value="bank_transfer" required>
+                                            <label class="form-check-label" for="payment_bank">
+                                                Bank Transfer
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="metode_pembayaran"
+                                                id="payment_gopay" value="gopay" required>
+                                            <label class="form-check-label" for="payment_gopay">
+                                                GoPay
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="metode_pembayaran"
+                                                id="payment_qris" value="qris" required>
+                                            <label class="form-check-label" for="payment_qris">
+                                                QRIS
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Status Pembayaran</label>
+                                    <div class="form-check">
+                                        <input type="radio" class="form-check-input" id="status_pembayaran" name="status_pembayaran"
                                             value="Belum Lunas">Belum Lunas
                                     </div>
                                     <div class="form-check">
-                                        <input type="radio" class="form-check-input" id="sts2" name="statustransaksi"
+                                        <input type="radio" class="form-check-input" id="status_pembayaran" name="status_pembayaran"
                                             value="Lunas">Lunas
                                     </div>
                                 </div>

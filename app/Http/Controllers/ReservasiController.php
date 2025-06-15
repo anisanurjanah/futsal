@@ -37,6 +37,7 @@ class ReservasiController extends Controller
                 'tanggal' => $item->tanggal,
                 'waktu_mulai' => $item->waktu_mulai,
                 'waktu_selesai' => $item->waktu_selesai,
+                'status' => $item->status,
                 'status_pembayaran' => $item->pembayaran->first()->status_pembayaran ?? '-',
             ];
         }
@@ -51,10 +52,10 @@ class ReservasiController extends Controller
      */
     public function create()
     {
-        $member = Pelanggan::all();
+        $pelanggan = Pelanggan::all();
         $lapangan = Lapangan::all();
 
-        return view('booking.add', ['member' => $member, 'lapangan' => $lapangan]);
+        return view('booking.add', ['pelanggan' => $pelanggan, 'lapangan' => $lapangan]);
     }
 
     /**
@@ -127,7 +128,11 @@ class ReservasiController extends Controller
      */
     public function show($id)
     {
-        //
+        $row = Reservasi::with(['pelanggan', 'lapangan', 'pembayaran.pembayaranDetail'])->findOrFail($id);
+
+        return view('booking.show', [
+            'row' => $row,
+        ]);
     }
 
     /**
@@ -209,7 +214,9 @@ class ReservasiController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('tbl_reservasi')->where('id', $id)->delete();
+        $reservasi = Reservasi::findOrFail($id);
+        $reservasi->delete();
+        
         return redirect()->back()->with('delete_sukses', 1);
     }
 }
