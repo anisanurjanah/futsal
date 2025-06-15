@@ -1,9 +1,9 @@
-<?php $__env->startSection('title', 'Home'); ?>
+<?php $__env->startSection('title', 'Dashboard'); ?>
 
 <?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-12">
-            <h1>Hai, <?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?></h1>
+            <h1>Hai, <?php echo e(auth()->user()->name); ?></h1>
         </div>
     </div>
 <?php $__env->stopSection(); ?>
@@ -157,7 +157,7 @@
                 events: [
                     <?php $__currentLoopData = $booking; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         {
-                            title: '<?php echo e($item->namalapangan); ?>',
+                            title: '<?php echo e($item->lapangan->name); ?>',
                             start: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_mulai); ?>'),
                             end: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_selesai); ?>'),
                         },

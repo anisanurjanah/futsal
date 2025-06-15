@@ -64,7 +64,7 @@
                         aria-expanded="true" class="nav-link dropdown-toggle">
                         <i class="fas fa-user-circle mr-2 text-lg"></i>
                         <span
-                            class="hidden-xs">{{ ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap) }}</span>
+                            class="hidden-xs">{{ auth()->user()->name }}</span>
                     </a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
                         style="left: 0px; right: inherit;">
@@ -101,10 +101,10 @@
                     </div>
                     <div class="info">
                         <a href="#"
-                            class="d-block">{{ ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap) }}
+                            class="d-block">{{ auth()->user()->name }}
                             <br>
                             <span
-                                class="small">{{ DB::table('tbl_user')->find(session()->get('id_user'))->email }}</span>
+                                class="small">{{ auth()->user()->email }}</span>
                         </a>
                     </div>
                 </div>
@@ -114,18 +114,18 @@
                         data-accordion="false">
                         <li class="nav-header">Home</li>
                         <li class="nav-item">
-                            <a href="{{ url('dashboard') }}"
-                                class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                            <a href="{{ url('/dashboard') }}"
+                                class="nav-link {{ request()->is('/dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">Kasir</li>
+                        <li class="nav-header">Reservasi</li>
                         <li class="nav-item">
-                            <a href="{{ url('booking/index') }}"
-                                class="nav-link {{ request()->is('booking/index') ? 'active' : '' }}">
+                            <a href="{{ url('/dashboard/reservasi') }}"
+                                class="nav-link {{ request()->is('/dashboard/reservasi') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Booking
@@ -141,18 +141,18 @@
                                 </p>
                             </a>
                         </li> --}}
-                        @if (session()->get('id_role') == '1')
-                            <li class="nav-header">Admin</li>
+                        @if (auth()->user()->isKasir())
+                            <li class="nav-header">Kasir</li>
                                 <li class="nav-item">
-                                    <a href="{{ url('pengguna/index') }}"
-                                        class="nav-link {{ request()->is('pengguna/index') ? 'active' : '' }}">
+                                    <a href="{{ url('/dashboard/pengguna') }}"
+                                        class="nav-link {{ request()->is('/dashboard/pengguna') ? 'active' : '' }}">
                                         <i class="nav-icon fas fa-user-plus"></i>
                                         <p>User</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="{{ url('lapangan/index') }}"
-                                    class="nav-link {{ request()->is('produk/index') ? 'active' : '' }}">
+                                <a href="{{ url('/dashboard/lapangan') }}"
+                                    class="nav-link {{ request()->is('/dashboard/lapangan') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Lapangan
@@ -160,8 +160,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ url('member/index') }}"
-                                    class="nav-link {{ request()->is('member/index') ? 'active' : '' }}">
+                                <a href="{{ url('/dashboard/pelanggan') }}"
+                                    class="nav-link {{ request()->is('/dashboard/pelanggan') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Pelanggan

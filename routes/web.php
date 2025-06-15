@@ -1,13 +1,15 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\LapanganController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PembayaranDetailController;
-use App\Http\Controllers\ReservasiController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,14 +30,15 @@ Route::post('/reservasi/add', 'HomeController@storeReservasi')->name('reservasi/
 
 Route::post('/cek-jadwal', [HomeController::class, 'getAvailableWaktu']);
 
-// Route::get('/login', function () {
-//     return view('auth.login');
-// });
+Route::get('/login', [AuthController::class, 'index']);
 
-// Route::post('login', 'AuthController@login')->name('login');
-// Route::get('logout', 'AuthController@logout')->name('logout');
+Route::post('login', [AuthController::class, 'login'])->name('login');
+Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::group(['middleware' => 'AdminMiddleware'], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profil', [DashboardController::class, 'profil'])->name('profil');
+
     Route::resource('/dashboard/pengguna', UserController::class);
     Route::resource('/dashboard/pelanggan', PelangganController::class);
     Route::resource('/dashboard/lapangan', LapanganController::class);

@@ -156,7 +156,7 @@ class HomeController extends Controller
             'tanggal' => $validated['tanggal'],
             'waktu_mulai' => $validated['waktu_mulai'],
             'waktu_selesai' => $validated['waktu_selesai'],
-            'metode_pembayaran' => $validated['metode_pembayaran'],
+            // 'metode_pembayaran' => $validated['metode_pembayaran'],
             'status' => 'Ditunda',
             'total_harga' => $totalHarga,
         ]);

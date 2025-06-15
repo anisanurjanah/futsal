@@ -80,31 +80,26 @@
                             </div>
 
                             <div class="form-group mb-3">
-                                <label class="d-block">Metode Pembayaran</label>
+                                <label class="d-block">Pembayaran</label>
                                 <div class="d-flex flex-wrap gap-3">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
-                                            id="payment_bank" value="bank_transfer" required>
-                                        <label class="form-check-label" for="payment_bank">
-                                            Bank Transfer
+                                        <input class="form-check-input" type="radio" name="tipe_pembayaran"
+                                            id="tipe_dp" value="dp" required>
+                                        <label class="form-check-label" for="tipe_dp">
+                                            Down Payment
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
-                                            id="payment_gopay" value="gopay" required>
-                                        <label class="form-check-label" for="payment_gopay">
-                                            GoPay
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="metode_pembayaran"
-                                            id="payment_qris" value="qris" required>
-                                        <label class="form-check-label" for="payment_qris">
-                                            QRIS
+                                        <input class="form-check-input" type="radio" name="tipe_pembayaran"
+                                            id="tipe_lunas" value="lunas" required>
+                                        <label class="form-check-label" for="tipe_lunas">
+                                            Lunas
                                         </label>
                                     </div>
                                 </div>
                             </div>
+
+                            
 
                             <button type="submit" class="btn btn-primary">Buat Reservasi</button>
                         </form>
@@ -173,14 +168,14 @@
                 return true;
             }
 
-            // Validasi metode pembayaran
-            function validatePaymentMethod() {
-                const selected = document.querySelector('input[name="metode_pembayaran"]:checked');
+            // Validasi pembayaran
+            function validatePaymentTipe() {
+                const selected = document.querySelector('input[name="tipe_pembayaran"]:checked');
                 if (!selected) {
                     Swal.fire({
                         icon: 'warning',
-                        title: 'Metode Pembayaran Belum Dipilih',
-                        text: 'Silakan pilih salah satu metode pembayaran terlebih dahulu.',
+                        title: 'Pembayaran Belum Dipilih',
+                        text: 'Silakan pilih salah satu pembayaran terlebih dahulu.',
                     });
                     return false;
                 }

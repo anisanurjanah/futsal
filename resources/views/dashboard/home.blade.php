@@ -1,11 +1,11 @@
 @extends('layout.main')
 
-@section('title', 'Home')
+@section('title', 'Dashboard')
 
 @section('breadcrums')
     <div class="row mb-2">
         <div class="col-sm-12">
-            <h1>Hai, {{ ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap) }}</h1>
+            <h1>Hai, {{ auth()->user()->name }}</h1>
         </div>
     </div>
 @endsection
@@ -177,7 +177,7 @@
                 events: [
                     @foreach ($booking as $item)
                         {
-                            title: '{{ $item->namalapangan }}',
+                            title: '{{ $item->lapangan->name }}',
                             start: new Date('{{ $item->tanggal }}T{{ $item->waktu_mulai }}'),
                             end: new Date('{{ $item->tanggal }}T{{ $item->waktu_selesai }}'),
                         },

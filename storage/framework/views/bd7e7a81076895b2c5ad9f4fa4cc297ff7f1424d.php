@@ -13,7 +13,7 @@
 <?php $__env->startSection('content'); ?>
     <div class="card">
         <div class="card-header">
-            <a href="<?php echo e(url('booking/add')); ?>" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="<?php echo e(url('/dashboard/reservasi/create')); ?>" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
         </div>
         <div class="card-body">
             <table id="tabelbooking" class="table table-bordered table-hover">
@@ -34,16 +34,16 @@
                         <tr>
                             <td class="text-center"><?php echo e($loop->iteration); ?></td>
                             <td><?php echo e($item['nama']); ?></td>
-                            <td><?php echo e($item['namalapangan']); ?></td>
+                            <td><?php echo e($item['nama_lapangan']); ?></td>
                             <td><?php echo e($item['tanggal']); ?></td>
                             <td class="text-center"><?php echo e($item['durasi']); ?> jam</td>
                             <td class="text-right">Rp.
-                                <?php echo e(number_format($item['durasi'] * $item['hargaperjam'], 0, ',', '.')); ?></td>
+                                <?php echo e(number_format($item['durasi'] * $item['harga'], 0, ',', '.')); ?></td>
                             <td class="text-center">
-                                <?php if($item['statustransaksi'] == 'Belum Lunas'): ?>
-                                    <span class="badge bg-primary"><?php echo e($item['statustransaksi']); ?></span>
-                                <?php elseif($item['statustransaksi'] == 'Lunas'): ?>
-                                    <span class="badge bg-success"><?php echo e($item['statustransaksi']); ?></span>
+                                <?php if($item['status_pembayaran'] == 'Belum Lunas'): ?>
+                                    <span class="badge bg-primary"><?php echo e($item['status_pembayaran']); ?></span>
+                                <?php elseif($item['status_pembayaran'] == 'Lunas'): ?>
+                                    <span class="badge bg-success"><?php echo e($item['status_pembayaran']); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-center">

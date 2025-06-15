@@ -113,7 +113,7 @@
                 </div>
                 <div class="card-body">
                     <div class="text-center">
-                        <a href="{{ route('reservasi') }}" class="btn btn-primary">Reservasi</a>
+                        <a href="{{ route('reservasi') }}" class="btn btn-primary" onclick="clearReservasiSession()">Reservasi</a>
                     </div>
                 </div>
             </div>
@@ -287,6 +287,12 @@
                 $('#new-event').val('')
             })
         })
+    </script>
+    <script>
+        function clearReservasiSession() {
+            sessionStorage.removeItem('tanggalReservasi');
+            sessionStorage.removeItem('lapanganId');
+        }
     </script>
     <script>
         @if (session('add_gagal'))

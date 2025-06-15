@@ -15,7 +15,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ url('booking/add') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="{{ url('/dashboard/reservasi/create') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
         </div>
         <div class="card-body">
             <table id="tabelbooking" class="table table-bordered table-hover">
@@ -36,16 +36,16 @@
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
                             <td>{{ $item['nama'] }}</td>
-                            <td>{{ $item['namalapangan'] }}</td>
+                            <td>{{ $item['nama_lapangan'] }}</td>
                             <td>{{ $item['tanggal'] }}</td>
                             <td class="text-center">{{ $item['durasi'] }} jam</td>
                             <td class="text-right">Rp.
-                                {{ number_format($item['durasi'] * $item['hargaperjam'], 0, ',', '.') }}</td>
+                                {{ number_format($item['durasi'] * $item['harga'], 0, ',', '.') }}</td>
                             <td class="text-center">
-                                @if ($item['statustransaksi'] == 'Belum Lunas')
-                                    <span class="badge bg-primary">{{ $item['statustransaksi'] }}</span>
-                                @elseif ($item['statustransaksi'] == 'Lunas')
-                                    <span class="badge bg-success">{{ $item['statustransaksi'] }}</span>
+                                @if ($item['status_pembayaran'] == 'Belum Lunas')
+                                    <span class="badge bg-primary">{{ $item['status_pembayaran'] }}</span>
+                                @elseif ($item['status_pembayaran'] == 'Lunas')
+                                    <span class="badge bg-success">{{ $item['status_pembayaran'] }}</span>
                                 @endif
                             </td>
                             <td class="text-center">

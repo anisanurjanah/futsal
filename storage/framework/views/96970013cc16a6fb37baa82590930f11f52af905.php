@@ -64,7 +64,7 @@
                         aria-expanded="true" class="nav-link dropdown-toggle">
                         <i class="fas fa-user-circle mr-2 text-lg"></i>
                         <span
-                            class="hidden-xs"><?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?></span>
+                            class="hidden-xs"><?php echo e(auth()->user()->name); ?></span>
                     </a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
                         style="left: 0px; right: inherit;">
@@ -101,11 +101,11 @@
                     </div>
                     <div class="info">
                         <a href="#"
-                            class="d-block"><?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?>
+                            class="d-block"><?php echo e(auth()->user()->name); ?>
 
                             <br>
                             <span
-                                class="small"><?php echo e(DB::table('tbl_user')->find(session()->get('id_user'))->email); ?></span>
+                                class="small"><?php echo e(auth()->user()->email); ?></span>
                         </a>
                     </div>
                 </div>
@@ -115,18 +115,18 @@
                         data-accordion="false">
                         <li class="nav-header">Home</li>
                         <li class="nav-item">
-                            <a href="<?php echo e(url('dashboard')); ?>"
-                                class="nav-link <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>">
+                            <a href="<?php echo e(url('/dashboard')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard') ? 'active' : ''); ?>">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">Kasir</li>
+                        <li class="nav-header">Reservasi</li>
                         <li class="nav-item">
-                            <a href="<?php echo e(url('booking/index')); ?>"
-                                class="nav-link <?php echo e(request()->is('booking/index') ? 'active' : ''); ?>">
+                            <a href="<?php echo e(url('/dashboard/reservasi')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard/reservasi') ? 'active' : ''); ?>">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Booking
@@ -134,18 +134,18 @@
                             </a>
                         </li>
                         
-                        <?php if(session()->get('id_role') == '1'): ?>
-                            <li class="nav-header">Admin</li>
+                        <?php if(auth()->user()->isKasir()): ?>
+                            <li class="nav-header">Kasir</li>
                                 <li class="nav-item">
-                                    <a href="<?php echo e(url('pengguna/index')); ?>"
-                                        class="nav-link <?php echo e(request()->is('pengguna/index') ? 'active' : ''); ?>">
+                                    <a href="<?php echo e(url('/dashboard/pengguna')); ?>"
+                                        class="nav-link <?php echo e(request()->is('/dashboard/pengguna') ? 'active' : ''); ?>">
                                         <i class="nav-icon fas fa-user-plus"></i>
                                         <p>User</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                <a href="<?php echo e(url('lapangan/index')); ?>"
-                                    class="nav-link <?php echo e(request()->is('produk/index') ? 'active' : ''); ?>">
+                                <a href="<?php echo e(url('/dashboard/lapangan')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/lapangan') ? 'active' : ''); ?>">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Lapangan
@@ -153,8 +153,8 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(url('member/index')); ?>"
-                                    class="nav-link <?php echo e(request()->is('member/index') ? 'active' : ''); ?>">
+                                <a href="<?php echo e(url('/dashboard/pelanggan')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/pelanggan') ? 'active' : ''); ?>">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Pelanggan
