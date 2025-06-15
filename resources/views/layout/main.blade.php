@@ -131,25 +131,9 @@
                                 </p>
                             </a>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a href="{{ url('pembayaran/index') }}"
-                                class="nav-link {{ request()->is('pembayaran/index') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    Pembayaran
-                                </p>
-                            </a>
-                        </li> --}}
                         @if (auth()->user()->isKasir())
-                            <li class="nav-header">Kasir</li>
-                                <li class="nav-item">
-                                    <a href="{{ url('/dashboard/pengguna') }}"
-                                        class="nav-link {{ request()->is('/dashboard/pengguna') ? 'active' : '' }}">
-                                        <i class="nav-icon fas fa-user-plus"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
+                        <li class="nav-header">Kasir</li>
+                            <li class="nav-item">
                                 <a href="{{ url('/dashboard/lapangan') }}"
                                     class="nav-link {{ request()->is('/dashboard/lapangan') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-book"></i>
@@ -159,15 +143,34 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="{{ url('/dashboard/pengguna') }}"
+                                    class="nav-link {{ request()->is('/dashboard/pengguna') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <p>
+                                        User
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="{{ url('/dashboard/pelanggan') }}"
                                     class="nav-link {{ request()->is('/dashboard/pelanggan') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-book"></i>
+                                    <i class="nav-icon fas fa-user-plus"></i>
                                     <p>
                                         Pelanggan
                                     </p>
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-header">Laporan</li>
+                        <li class="nav-item">
+                            <a href="{{ url('/dashboard/keuangan') }}"
+                                class="nav-link {{ request()->is('/dashboard/keuangan') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>
+                                    Keuangan
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ url('logout') }}" class="nav-link text-danger">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>

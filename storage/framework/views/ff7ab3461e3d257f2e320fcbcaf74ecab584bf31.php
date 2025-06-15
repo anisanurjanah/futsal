@@ -33,12 +33,13 @@
                             <td class="text-right">Rp. <?php echo e(number_format($item->price,0,',','.')); ?></td>                             
                             <td class="text-center">
                                 <a href="<?php echo e(url('/dashboard/lapangan/' . $item->id . '/edit')); ?>" class="btn btn-xs btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i> </a>
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
                                 
-                                    <form id="delete-form-<?php echo e($item->id); ?>" action="<?php echo e(url('/dashboard/lapangan/' . $item->id)); ?>" method="POST" style="display: none;">
-                                        <?php echo csrf_field(); ?>
-                                        <?php echo method_field('DELETE'); ?>
-                                    </form>
+                                <form id="delete-form-<?php echo e($item->id); ?>" action="<?php echo e(url('/dashboard/lapangan/' . $item->id)); ?>" method="POST" style="display: none;">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
+                                </form>
                                 <button onclick="del(<?php echo e($item->id); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>

@@ -41,7 +41,6 @@
                                     <?php echo method_field('DELETE'); ?>
                                 </form>
                                 <button onclick="del(<?php echo e($item->id); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
-                                
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

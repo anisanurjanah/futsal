@@ -26,7 +26,7 @@
                         <th class="text-center">DURASI</th>
                         <th class="text-center">TOTAL HARGA</th>
                         <th class="text-center">STATUS</th>
-                        <th class="text-center">STATUS PEMBAYARAN</th>
+                        <th class="text-center">PEMBAYARAN</th>
                         <th class="text-center">AKSI</th>
                     </tr>
                 </thead>

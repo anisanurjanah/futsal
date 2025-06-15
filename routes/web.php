@@ -2,10 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\LapanganController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\ReservasiController;
 use App\Http\Controllers\PembayaranController;
@@ -47,6 +48,9 @@ Route::group(['middleware' => 'AdminMiddleware'], function () {
     Route::resource('/dashboard/reservasi', ReservasiController::class);
     Route::resource('/dashboard/pembayaran/', PembayaranController::class);
     Route::resource('/dashboard/pembayarandetails', PembayaranDetailController::class);
+
+    Route::get('/dashboard/keuangan', [LaporanController::class, 'keuangan']);
+    Route::get('/dashboard/keuangan/export-pdf', [LaporanController::class, 'exportPDF']);
 });
 
 // Route::group(['middleware' => 'AdminMiddleware'], function () {

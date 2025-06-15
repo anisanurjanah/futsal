@@ -132,17 +132,9 @@
                                 </p>
                             </a>
                         </li>
-                        
                         <?php if(auth()->user()->isKasir()): ?>
-                            <li class="nav-header">Kasir</li>
-                                <li class="nav-item">
-                                    <a href="<?php echo e(url('/dashboard/pengguna')); ?>"
-                                        class="nav-link <?php echo e(request()->is('/dashboard/pengguna') ? 'active' : ''); ?>">
-                                        <i class="nav-icon fas fa-user-plus"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
+                        <li class="nav-header">Kasir</li>
+                            <li class="nav-item">
                                 <a href="<?php echo e(url('/dashboard/lapangan')); ?>"
                                     class="nav-link <?php echo e(request()->is('/dashboard/lapangan') ? 'active' : ''); ?>">
                                     <i class="nav-icon fas fa-book"></i>
@@ -152,15 +144,34 @@
                                 </a>
                             </li>
                             <li class="nav-item">
+                                <a href="<?php echo e(url('/dashboard/pengguna')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/pengguna') ? 'active' : ''); ?>">
+                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <p>
+                                        User
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <a href="<?php echo e(url('/dashboard/pelanggan')); ?>"
                                     class="nav-link <?php echo e(request()->is('/dashboard/pelanggan') ? 'active' : ''); ?>">
-                                    <i class="nav-icon fas fa-book"></i>
+                                    <i class="nav-icon fas fa-user-plus"></i>
                                     <p>
                                         Pelanggan
                                     </p>
                                 </a>
                             </li>
                         <?php endif; ?>
+                        <li class="nav-header">Laporan</li>
+                        <li class="nav-item">
+                            <a href="<?php echo e(url('/dashboard/keuangan')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard/keuangan') ? 'active' : ''); ?>">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>
+                                    Keuangan
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?php echo e(url('logout')); ?>" class="nav-link text-danger">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>

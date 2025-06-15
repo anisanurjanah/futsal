@@ -21,7 +21,7 @@ class PembayaranFactory extends Factory
             'tanggal_pembayaran' => now()->toDateString(),
             'total_pembayaran' => fake()->numberBetween(10000, 1000000),
             'sisa_pembayaran' => fake()->numberBetween(10000, 100000),
-            'status_pembayaran' => fake()->randomElement(['Ditunda', 'Gagal', 'Dibayar']),
+            'status_pembayaran' => fake()->randomElement(['Ditunda', 'Gagal', 'Lunas', 'Belum Lunas']),
         ];
     }
 }
