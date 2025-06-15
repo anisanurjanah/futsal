@@ -39,7 +39,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
-                                    <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         required>
                                 </div>
                                 <div class="form-group">
@@ -51,16 +51,10 @@
                                     <input type="password" class="form-control" name="password" id="password"
                                         required>
                                 </div>
-                                <div class="form-group">
-                                    <label>Jenis Kelamin</label>
-                                    <select name="id_gender" id="id_gender" class="form-control" required>
-                                        <option value="1">Pria</option>
-                                        <option value="2">Wanita</option>
-                                    </select>
-                                </div>                                
+                                
                                 <div class="form-group">
                                     <label>User Grup</label>
-                                    <select name="id_role" id="id_role" class="form-control" required>
+                                    <select name="role" id="role" class="form-control" required>
                                         <?php $__currentLoopData = $role; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($key); ?>"><?php echo e($value); ?></option>
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -36,6 +36,7 @@
                 <div class="card-body">
 
                     <form action="{{ url('/dashboard/pengguna/' . $row->id) }}" method="post">
+                        @method('PUT')
                         @csrf
                         <div class="row">
                             <div class="col-md-4"></div>
@@ -43,7 +44,7 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="hidden" name="id" value="{{ $row->id }}">
-                                    <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         value="{{ $row->name }}" required>
                                 </div>
                                 <div class="form-group">
@@ -54,11 +55,11 @@
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input type="password" class="form-control" name="password" id="password"
-                                        required>
+                                        value="{{ $row->password }}" required>
                                 </div>
                                 <div class="form-group">
                                     <label>User Grup</label>
-                                    <select name="id_role" id="id_role" class="form-control" required>
+                                    <select name="role" id="role" class="form-control" required>
                                         @foreach ($role as $key => $value)
                                             <option value="{{ $key }}" {{ strtolower($row->role) == strtolower($key) ? 'selected' : '' }}>
                                                 {{ $value }}

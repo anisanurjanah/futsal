@@ -34,6 +34,7 @@
                 <div class="card-body">
 
                     <form action="<?php echo e(url('/dashboard/pengguna/' . $row->id)); ?>" method="post">
+                        <?php echo method_field('PUT'); ?>
                         <?php echo csrf_field(); ?>
                         <div class="row">
                             <div class="col-md-4"></div>
@@ -41,7 +42,7 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="hidden" name="id" value="<?php echo e($row->id); ?>">
-                                    <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         value="<?php echo e($row->name); ?>" required>
                                 </div>
                                 <div class="form-group">
@@ -52,11 +53,11 @@
                                 <div class="form-group">
                                     <label>Password</label>
                                     <input type="password" class="form-control" name="password" id="password"
-                                        required>
+                                        value="<?php echo e($row->password); ?>" required>
                                 </div>
                                 <div class="form-group">
                                     <label>User Grup</label>
-                                    <select name="id_role" id="id_role" class="form-control" required>
+                                    <select name="role" id="role" class="form-control" required>
                                         <?php $__currentLoopData = $role; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $value): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($key); ?>" <?php echo e(strtolower($row->role) == strtolower($key) ? 'selected' : ''); ?>>
                                                 <?php echo e($value); ?>

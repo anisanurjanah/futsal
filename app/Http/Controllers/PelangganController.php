@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Pelanggan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class PelangganController extends Controller
@@ -41,7 +40,7 @@ class PelangganController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:64',
-            'email' => 'required|email|unique:pelanggans,email',
+            'email' => 'required|email|unique:pelanggans,email|max:32',
             'phone' => 'required|string|max:15',
         ]);
 

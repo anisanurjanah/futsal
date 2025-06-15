@@ -43,8 +43,6 @@
                                     @method('DELETE')
                                 </form>
                                 <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
-                                {{-- <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i
-                                        class="fas fa-trash"></i> </button> --}}
                             </td>
                         </tr>
                     @endforeach

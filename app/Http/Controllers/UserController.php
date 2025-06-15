@@ -4,9 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -42,16 +40,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('tbl_user')->insert([
-            'nama_lengkap' => $request->nama_lengkap,
-            'email' => $request->email,
-            'id_gender' => $request->id_gender,
-            'id_role' => $request->id_role,
-            'is_active' => '1',
-            'password' => Hash::make($request->password),
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'email' => 'required|email|unique:users,email|max:32',
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:Kasir,Pemilik',
         ]);
 
-        return redirect('pengguna/index')->with('add_sukses', 1);
+        $validated['password'] = bcrypt($validated['password']);
+        User::create($validated);
+
+        return redirect('/dashboard/pengguna')->with('add_sukses', 1);
     }
 
     /**
@@ -91,17 +90,24 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::table('tbl_user')
-            ->where('id', $request->id)
-            ->update([
-                'nama_lengkap' => $request->nama_lengkap,
-                'email' => $request->email,
-                'id_gender' => $request->id_gender,
-                'id_role' => $request->id_role,
-                'password' => Hash::make($request->password),
-            ]);
+        $user = User::findOrFail($id);
 
-        return redirect('pengguna/index')->with('edit_sukses', 1);
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'email' => 'required|email|max:32|unique:users,email,' . $id,
+            'password' => 'nullable|string',
+            'role' => 'required|in:Kasir,Pemilik',
+        ]);
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect('/dashboard/pengguna')->with('edit_sukses', 1);
     }
 
     /**
@@ -112,7 +118,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('tbl_user')->where('id', $id)->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
+
         return redirect()->back()->with('delete_sukses', 1);
     }
 }
