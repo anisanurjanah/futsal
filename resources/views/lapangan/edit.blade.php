@@ -29,18 +29,19 @@
                     </div>
 
                     <div class="card-body">
+                        @method('PUT')
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>NAMA lapangan</label>
-                                    <input type="text" class="form-control" name="namalapangan" id="namalapangan"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         autocomplete="off" value="{{ $row->name }}" required>
                                         <input type="hidden" name="id" value="{{ $row->id }}">
                                 </div>
                                 <div class="form-group">
                                     <label>HARGA PER JAM</label>
-                                    <input type="number" class="form-control" name="hargaperjam" id="hargaperjam"
+                                    <input type="number" class="form-control" name="price" id="price"
                                         autocomplete="off" value="{{ $row->price }}" required>
                                 </div>
                             </div>

@@ -34,12 +34,12 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>NAMA LAPANGAN</label>
-                                    <input type="text" class="form-control" name="namalapangan" id="namalapangan"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         autocomplete="off" required>
                                 </div>
                                 <div class="form-group">
                                     <label>HARGA PER JAM</label>
-                                    <input type="number" class="form-control" name="hargaperjam" id="hargaperjam"
+                                    <input type="number" class="form-control" name="price" id="price"
                                         autocomplete="off" required>
                                 </div>
                             </div>
