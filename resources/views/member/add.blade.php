@@ -34,7 +34,7 @@
                             <div class="col-md-12">
                                 <div class="form-group">
                                     <label>NAMA</label>
-                                    <input type="text" class="form-control" name="nama" id="nama"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         autocomplete="off" required>
                                 </div>
                                 <div class="form-group">
@@ -44,7 +44,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>NO TELEPON</label>
-                                    <input type="text" class="form-control" name="no_telepon" id="no_telepon"
+                                    <input type="text" class="form-control" name="phone" id="phone"
                                         autocomplete="off" required>
                                 </div>
                             </div>

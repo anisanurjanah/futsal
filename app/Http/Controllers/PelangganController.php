@@ -39,12 +39,15 @@ class PelangganController extends Controller
      */
     public function store(Request $request)
     {
-        DB::table('tbl_pelanggan')->insert([
-            'nama' => $request->nama,
-            'no_telepon' => $request->no_telepon,
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'email' => 'required|email|unique:pelanggans,email',
+            'phone' => 'required|string|max:15',
         ]);
 
-        return redirect('member/index')->with('add_sukses', 1);
+        Pelanggan::create($validated);
+
+        return redirect('/dashboard/pelanggan')->with('add_sukses', 1);
     }
 
     /**
@@ -82,14 +85,17 @@ class PelangganController extends Controller
      */
     public function update(Request $request, $id)
     {
-        DB::table('tbl_pelanggan')
-            ->where('id', $request->id)
-            ->update([
-                'nama' => $request->nama,
-                'no_telepon' => $request->no_telepon,
-            ]);
+        $row = Pelanggan::findOrFail($id);
 
-        return redirect('member/index')->with('edit_sukses', 1);
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'email' => 'required|email|unique:pelanggans,email,' . $id,
+            'phone' => 'required|string|max:15',
+        ]);
+
+        $row->update($validated);
+
+        return redirect('/dashboard/pelanggan')->with('edit_sukses', 1);
     }
 
     /**
@@ -100,7 +106,9 @@ class PelangganController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('tbl_pelanggan')->where('id', $id)->delete();
+        $pelanggan = Pelanggan::findOrFail($id);
+        $pelanggan->delete();
+
         return redirect()->back()->with('delete_sukses', 1);
     }
 }

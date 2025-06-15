@@ -34,9 +34,14 @@
                             <td><?php echo e($item->phone); ?></td>
                             <td class="text-center">
                                 <a href="<?php echo e(url('/dashboard/pelanggan/' . $item->id . '/edit')); ?>" class="btn btn-xs btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i> </a>
-                                <button onclick="del(<?php echo e($item->id); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i
-                                        class="fas fa-trash"></i> </button>
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
+                                <form id="delete-form-<?php echo e($item->id); ?>" action="<?php echo e(url('/dashboard/pelanggan/' . $item->id)); ?>" method="POST" style="display: none;">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
+                                </form>
+                                <button onclick="del(<?php echo e($item->id); ?>)" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
@@ -109,7 +114,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?php echo e(url('/dashboard/pelanggan')); ?>/" + id;
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }

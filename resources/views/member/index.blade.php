@@ -36,9 +36,15 @@
                             <td>{{ $item->phone }}</td>
                             <td class="text-center">
                                 <a href="{{ url('/dashboard/pelanggan/' . $item->id . '/edit') }}" class="btn btn-xs btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i> </a>
-                                <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i
-                                        class="fas fa-trash"></i> </button>
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
+                                <form id="delete-form-{{ $item->id }}" action="{{ url('/dashboard/pelanggan/' . $item->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                                <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
+                                {{-- <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i
+                                        class="fas fa-trash"></i> </button> --}}
                             </td>
                         </tr>
                     @endforeach
@@ -111,7 +117,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('/dashboard/pelanggan') }}/" + id;
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }
