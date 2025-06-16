@@ -65,56 +65,54 @@
             <hr>
 
             <h5>Informasi Pembayaran</h5>
-            <?php if($row->pembayaran->isEmpty()): ?>
+            <?php if(!$row->pembayaran): ?>
                 <p class="text-center">Tidak ada data pembayaran yang ditampilkan.</p>
             <?php else: ?>
-                <?php $__currentLoopData = $row->pembayaran; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pembayaran): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Tanggal Pembayaran</th>
-                            <td><?php echo e($pembayaran->tanggal_pembayaran); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Total Pembayaran</th>
-                            <td>Rp <?php echo e(number_format($pembayaran->total_pembayaran, 0, ',', '.')); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Sisa Pembayaran</th>
-                            <td>Rp <?php echo e(number_format($pembayaran->sisa_pembayaran, 0, ',', '.')); ?></td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>
-                                <span class="badge <?php echo e($pembayaran->status_pembayaran == 'Lunas' ? 'bg-success' : 'bg-warning'); ?>">
-                                    <?php echo e($pembayaran->status_pembayaran); ?>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Tanggal Pembayaran</th>
+                        <td><?php echo e($row->pembayaran->tanggal_pembayaran); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Total Pembayaran</th>
+                        <td>Rp <?php echo e(number_format($row->pembayaran->total_pembayaran, 0, ',', '.')); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Sisa Pembayaran</th>
+                        <td>Rp <?php echo e(number_format($row->pembayaran->sisa_pembayaran, 0, ',', '.')); ?></td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span class="badge <?php echo e($row->pembayaran->status_pembayaran == 'Lunas' ? 'bg-success' : 'bg-warning'); ?>">
+                                <?php echo e($row->pembayaran->status_pembayaran); ?>
 
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
+                            </span>
+                        </td>
+                    </tr>
+                </table>
 
-                    <h6 class="mt-4">Rincian Pembayaran</h6>
-                    <table class="table table-striped table-bordered">
-                        <thead>
+                <h6 class="mt-4">Rincian Pembayaran</h6>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Metode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $__currentLoopData = $row->pembayaran->pembayaranDetail; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <th>#</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Metode</th>
+                                <td><?php echo e($i + 1); ?></td>
+                                <td><?php echo e($detail->tanggal_pembayaran); ?></td>
+                                <td>Rp <?php echo e(number_format($detail->jumlah_pembayaran, 0, ',', '.')); ?></td>
+                                <td><?php echo e($detail->metode_pembayaran); ?></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php $__currentLoopData = $pembayaran->pembayaranDetail; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $detail): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                <tr>
-                                    <td><?php echo e($i + 1); ?></td>
-                                    <td><?php echo e($detail->tanggal_pembayaran); ?></td>
-                                    <td>Rp <?php echo e(number_format($detail->jumlah_pembayaran, 0, ',', '.')); ?></td>
-                                    <td><?php echo e($detail->metode_pembayaran); ?></td>
-                                </tr>
-                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                        </tbody>
-                    </table>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                    </tbody>
+                </table>
             <?php endif; ?>
         </div>
     </div>

@@ -78,7 +78,6 @@
                                     <?php endfor; ?>
                                 </select>
                             </div>
-
                             <div class="form-group mb-3">
                                 <label class="d-block">Pembayaran</label>
                                 <div class="d-flex flex-wrap gap-3">
@@ -97,6 +96,14 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="total_harga">Total Harga</label>
+                                <input type="text" class="form-control" id="total_harga" name="total_harga" value="Rp 0" readonly disabled>
+                            </div>
+                            <div class="form-group d-none" id="dp_wrapper">
+                                <label for="harga_dp">Harga DP (50%)</label>
+                                <input type="text" class="form-control" id="harga_dp" value="Rp 0" readonly disabled>
                             </div>
 
                             
@@ -118,7 +125,7 @@
             const waktuSelesai = document.getElementById('waktu_selesai');
             const waktuError = document.getElementById('waktuError');
             const tanggalInput = document.getElementById('tanggal');
-            const lapanganInputs = document.querySelectorAll('input[name="lapangan_id"]');
+            const hargaLapangan = <?php echo json_encode($lapangan, 15, 512) ?>;
 
             // Setelah semua element diambil
             if (tanggalInput.value && document.querySelector('input[name="lapangan_id"]:checked')) {
@@ -232,10 +239,38 @@
                 });
             }
 
-            tanggalInput.addEventListener('change', fetchAvailableTimes);
-            lapanganInputs.forEach(input => {
-                input.addEventListener('change', fetchAvailableTimes);
-            });
+            function hitungTotalHarga() {
+                const lapanganRadio = document.querySelector('input[name="lapangan_id"]:checked');
+                const waktuMulaiEl = document.getElementById('waktu_mulai');
+                const waktuSelesaiEl = document.getElementById('waktu_selesai');
+                const totalHargaEl = document.getElementById('total_harga');
+                const hargaDpEl = document.getElementById('harga_dp');
+                const dpWrapper = document.getElementById('dp_wrapper');
+
+                if (!lapanganRadio || !waktuMulaiEl.value || !waktuSelesaiEl.value) {
+                    totalHargaEl.value = 'Rp 0';
+                    hargaDpEl.value = 'Rp 0';
+                    dpWrapper.classList.add('d-none');
+                    return;
+                }
+
+                const lapanganId = lapanganRadio.value;
+                const harga = hargaLapangan.find(l => l.id == lapanganId)?.price || 0;
+                const durasi = parseInt(waktuSelesaiEl.value.split(':')[0]) - parseInt(waktuMulaiEl.value.split(':')[0]);
+                const total = harga * durasi;
+
+                totalHargaEl.value = 'Rp ' + total.toLocaleString('id-ID');
+
+                // Cek jika tipe pembayaran adalah DP
+                const tipePembayaran = document.querySelector('input[name="tipe_pembayaran"]:checked')?.value;
+                if (tipePembayaran === 'dp') {
+                    hargaDpEl.value = 'Rp ' + (total / 2).toLocaleString('id-ID');
+                    dpWrapper.classList.remove('d-none');
+                } else {
+                    dpWrapper.classList.add('d-none');
+                    hargaDpEl.value = 'Rp 0';
+                }
+            }
 
             // Event listener untuk waktu mulai
             // waktuMulai.addEventListener('change', function() {
@@ -244,6 +279,13 @@
 
             // Event listener untuk waktu selesai
             waktuSelesai.addEventListener('change', validateTime);
+
+            document.getElementById('waktu_mulai').addEventListener('change', hitungTotalHarga);
+            document.getElementById('waktu_selesai').addEventListener('change', hitungTotalHarga);
+
+            document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
+                input.addEventListener('change', hitungTotalHarga);
+            });
 
             // Event listener untuk form submission
             form.addEventListener('submit', function(e) {

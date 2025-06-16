@@ -143,10 +143,11 @@ class HomeController extends Controller
         $hargaPerJam = $lapangan->price;
         $durasi = (int) explode(':', $validated['waktu_selesai'])[0] - (int) explode(':', $validated['waktu_mulai'])[0];
         $totalHarga = $hargaPerJam * $durasi;
+        $snapPrice = $validated['tipe_pembayaran'] === 'dp' ? $totalHarga * 0.5 : $totalHarga;
 
         $orderId = 'RESV-' . time() . '-' . rand(100, 999);
 
-        $snapToken = $this->createSnapToken($orderId, $totalHarga, $validated['nama'], $validated['email'], $validated['nomor_telepon']);
+        $snapToken = $this->createSnapToken($orderId, $snapPrice, $validated['nama'], $validated['email'], $validated['nomor_telepon']);
 
         $reservasi = Reservasi::create([
             'order_id' => $orderId,

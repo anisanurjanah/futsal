@@ -65,55 +65,53 @@
             <hr>
 
             <h5>Informasi Pembayaran</h5>
-            @if ($row->pembayaran->isEmpty())
+            @if (!$row->pembayaran)
                 <p class="text-center">Tidak ada data pembayaran yang ditampilkan.</p>
             @else
-                @foreach ($row->pembayaran as $pembayaran)
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>Tanggal Pembayaran</th>
-                            <td>{{ $pembayaran->tanggal_pembayaran }}</td>
-                        </tr>
-                        <tr>
-                            <th>Total Pembayaran</th>
-                            <td>Rp {{ number_format($pembayaran->total_pembayaran, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Sisa Pembayaran</th>
-                            <td>Rp {{ number_format($pembayaran->sisa_pembayaran, 0, ',', '.') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>
-                                <span class="badge {{ $pembayaran->status_pembayaran == 'Lunas' ? 'bg-success' : 'bg-warning' }}">
-                                    {{ $pembayaran->status_pembayaran }}
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Tanggal Pembayaran</th>
+                        <td>{{ $row->pembayaran->tanggal_pembayaran }}</td>
+                    </tr>
+                    <tr>
+                        <th>Total Pembayaran</th>
+                        <td>Rp {{ number_format($row->pembayaran->total_pembayaran, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Sisa Pembayaran</th>
+                        <td>Rp {{ number_format($row->pembayaran->sisa_pembayaran, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status</th>
+                        <td>
+                            <span class="badge {{ $row->pembayaran->status_pembayaran == 'Lunas' ? 'bg-success' : 'bg-warning' }}">
+                                {{ $row->pembayaran->status_pembayaran }}
+                            </span>
+                        </td>
+                    </tr>
+                </table>
 
-                    <h6 class="mt-4">Rincian Pembayaran</h6>
-                    <table class="table table-striped table-bordered">
-                        <thead>
+                <h6 class="mt-4">Rincian Pembayaran</h6>
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Metode</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($row->pembayaran->pembayaranDetail as $i => $detail)
                             <tr>
-                                <th>#</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Metode</th>
+                                <td>{{ $i + 1 }}</td>
+                                <td>{{ $detail->tanggal_pembayaran }}</td>
+                                <td>Rp {{ number_format($detail->jumlah_pembayaran, 0, ',', '.') }}</td>
+                                <td>{{ $detail->metode_pembayaran }}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pembayaran->pembayaranDetail as $i => $detail)
-                                <tr>
-                                    <td>{{ $i + 1 }}</td>
-                                    <td>{{ $detail->tanggal_pembayaran }}</td>
-                                    <td>Rp {{ number_format($detail->jumlah_pembayaran, 0, ',', '.') }}</td>
-                                    <td>{{ $detail->metode_pembayaran }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                @endforeach
+                        @endforeach
+                    </tbody>
+                </table>
             @endif
         </div>
     </div>

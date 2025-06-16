@@ -26,6 +26,12 @@ class Pembayaran extends Model
         return 'id';
     }
 
+    const METODE_PEMBAYARAN = [
+        'Tunai' => 'Tunai', 
+        'Bank Transfer' => 'Bank Transfer', 
+        'QRIS' => 'QRIS',
+    ];
+
     const STATUS_PEMBAYARAN = [
         'Lunas' => 'Lunas',
         'Belum Lunas' => 'Belum Lunas',

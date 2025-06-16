@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reservasi;
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use App\Models\PembayaranDetail;
+use App\Http\Controllers\Controller;
 
 class PembayaranDetailController extends Controller
 {
@@ -34,7 +38,49 @@ class PembayaranDetailController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $reservasi = Reservasi::findOrFail($request->reservasi_id);
+
+        $request->validate([
+            'reservasi_id' => 'required|exists:reservasis,id',
+            'jumlah_pembayaran' => 'required|numeric|min:1000',
+            'metode_pembayaran' => 'required|string|max:64',
+        ]);
+
+        $pembayaran = Pembayaran::firstOrCreate(
+            ['reservasi_id' => $reservasi->id],
+            [
+                'tanggal_pembayaran' => now(),
+                'total_pembayaran' => 0,
+                'sisa_pembayaran' => 0,
+                'status_pembayaran' => 'Belum Lunas',
+            ]
+        );
+
+        PembayaranDetail::create([
+            'pembayaran_id' => $pembayaran->id,
+            'tanggal_pembayaran' => now(),
+            'jumlah_pembayaran' => $request->jumlah_pembayaran,
+            'metode_pembayaran' => $request->metode_pembayaran,
+        ]);
+
+        $totalDetail = $pembayaran->pembayaranDetail()->sum('jumlah_pembayaran');
+
+        $harga = $reservasi->lapangan->price;
+        $waktuMulai = intval(substr($reservasi->waktu_mulai, 0, 2));
+        $waktuSelesai = intval(substr($reservasi->waktu_selesai, 0, 2));
+        $durasi = $waktuSelesai - $waktuMulai;
+        $totalHarga = $harga * $durasi;
+
+        $sisa = max($totalHarga - $totalDetail, 0);
+
+        $pembayaran->update([
+            'tanggal_pembayaran' => now(),
+            'total_pembayaran' => $totalHarga,
+            'sisa_pembayaran' => $sisa,
+            'status_pembayaran' => $sisa == 0 ? 'Lunas' : 'Belum Lunas',
+        ]);
+
+        return redirect()->back()->with('success', 'Pembayaran berhasil ditambahkan');
     }
 
     /**

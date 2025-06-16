@@ -9,6 +9,7 @@ use App\Models\Reservasi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Pembayaran;
 
 class ReservasiController extends Controller
 {
@@ -38,7 +39,7 @@ class ReservasiController extends Controller
                 'waktu_mulai' => $item->waktu_mulai,
                 'waktu_selesai' => $item->waktu_selesai,
                 'status' => $item->status,
-                'status_pembayaran' => $item->pembayaran->first()->status_pembayaran ?? '-',
+                'status_pembayaran' => $item->pembayaran->status_pembayaran,
             ];
         }
 
@@ -143,14 +144,16 @@ class ReservasiController extends Controller
      */
     public function edit($id)
     {
-        $row = Reservasi::with(['pelanggan', 'lapangan'])->findOrFail($id);
+        $row = Reservasi::with(['pelanggan', 'lapangan', 'pembayaran'])->findOrFail($id);
         $pelanggan = Pelanggan::all();
         $lapangan = Lapangan::all();
+        $metodePembayaran = Pembayaran::METODE_PEMBAYARAN;
 
         return view('booking.edit', [
             'row' => $row,
             'pelanggan' => $pelanggan,
             'lapangan' => $lapangan,
+            'metodePembayaran' => $metodePembayaran,
         ]);
     }
 

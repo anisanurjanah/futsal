@@ -1,8 +1,8 @@
-@extends('layout.main')
 
-@section('title', 'Booking')
 
-@section('breadcrums')
+<?php $__env->startSection('title', 'Booking'); ?>
+
+<?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-6">
             <h1>Edit Booking</h1>
@@ -10,20 +10,20 @@
         <div class="col-sm-6">
         </div>
     </div>
-@endsection
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
     <div class="row">
         <div class="col-md">
-            <form action="{{ url('/dashboard/reservasi/' . $row->id) }}" method="POST" id="reservasiForm">
-                @method('PUT')
-                @csrf
+            <form action="<?php echo e(url('/dashboard/reservasi/' . $row->id)); ?>" method="POST" id="reservasiForm">
+                <?php echo method_field('PUT'); ?>
+                <?php echo csrf_field(); ?>
                 <div class="card">
                     <div class="card-header">
                         <div class="row">
                             <div class="col">
                                 <div class="ml-auto">
-                                    <a href="{{ url('/dashboard/reservasi') }}" class="btn btn-default">
+                                    <a href="<?php echo e(url('/dashboard/reservasi')); ?>" class="btn btn-default">
                                         <i class="fas fa fa-reply"></i> Kembali </a>
                                 </div>
                             </div>
@@ -33,54 +33,55 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
-                                <input type="hidden" name="id" value="{{ $row->id }}">
-                                <input type="hidden" name="idmember" value="{{ $row->id_pelanggan }}">
+                                <input type="hidden" name="id" value="<?php echo e($row->id); ?>">
+                                <input type="hidden" name="idmember" value="<?php echo e($row->id_pelanggan); ?>">
                                 <div class="form-group">
                                     <label>NAMA LAPANGAN</label>
                                     <select name="lapangan_id" id="lapangan_id" class="form-control" required>
                                         <option value="">--Pilih Lapangan--</option>
-                                        @foreach ($lapangan as $dt)
-                                            <option value="{{ $dt->id }}"
-                                                {{ (int)$row->lapangan_id === (int)$dt->id ? 'selected' : '' }}>
-                                                {{ $dt->name }}
+                                        <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <option value="<?php echo e($dt->id); ?>"
+                                                <?php echo e((int)$row->lapangan_id === (int)$dt->id ? 'selected' : ''); ?>>
+                                                <?php echo e($dt->name); ?>
+
                                             </option>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </select>
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="tanggal">Tanggal</label>
                                     <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                        value="{{ $row->tanggal }}" required min="{{ date('Y-m-d') }}">
+                                        value="<?php echo e($row->tanggal); ?>" required min="<?php echo e(date('Y-m-d')); ?>">
                                 </div>
 
                                 <div class="form-group mb-3">
                                     <label for="waktu_mulai">Waktu Mulai</label>
                                     <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
                                         <option value="">Pilih Waktu Mulai</option>
-                                        @for ($i = 1; $i <= 24; $i++)
-                                            @if ($i < 10)
-                                                @if ($row->waktu_mulai == '0' . $i . ':00:00')
-                                                    <option value="0{{ $i }}:00:00" selected>
-                                                        {{ $i }}:00
+                                        <?php for($i = 1; $i <= 24; $i++): ?>
+                                            <?php if($i < 10): ?>
+                                                <?php if($row->waktu_mulai == '0' . $i . ':00:00'): ?>
+                                                    <option value="0<?php echo e($i); ?>:00:00" selected>
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @else
-                                                    <option value="0{{ $i }}:00:00">
-                                                        {{ $i }}:00
+                                                <?php else: ?>
+                                                    <option value="0<?php echo e($i); ?>:00:00">
+                                                        <?php echo e($i); ?>:00
                                                     </option>.
-                                                @endif
-                                            @else
-                                                @if ($row->waktu_mulai == $i . ':00:00')
-                                                    <option value="{{ $i }}:00:00" selected>
-                                                        {{ $i }}:00
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <?php if($row->waktu_mulai == $i . ':00:00'): ?>
+                                                    <option value="<?php echo e($i); ?>:00:00" selected>
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @else
-                                                    <option value="{{ $i }}:00:00">
-                                                        {{ $i }}:00
+                                                <?php else: ?>
+                                                    <option value="<?php echo e($i); ?>:00:00">
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @endif
-                                            @endif
-                                        @endfor
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
                                     </select>
                                 </div>
 
@@ -88,29 +89,29 @@
                                     <label for="waktu_selesai">Waktu Selesai</label>
                                     <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
                                         <option value="">Pilih Waktu Selesai</option>
-                                        @for ($i = 1; $i <= 24; $i++)
-                                            @if ($i < 10)
-                                                @if ($row->waktu_selesai == '0' . $i . ':00:00')
-                                                    <option value="0{{ $i }}:00:00" selected>
-                                                        {{ $i }}:00
+                                        <?php for($i = 1; $i <= 24; $i++): ?>
+                                            <?php if($i < 10): ?>
+                                                <?php if($row->waktu_selesai == '0' . $i . ':00:00'): ?>
+                                                    <option value="0<?php echo e($i); ?>:00:00" selected>
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @else
-                                                    <option value="0{{ $i }}:00:00">
-                                                        {{ $i }}:00
+                                                <?php else: ?>
+                                                    <option value="0<?php echo e($i); ?>:00:00">
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @endif
-                                            @else
-                                                @if ($row->waktu_selesai == $i . ':00:00')
-                                                    <option value="{{ $i }}:00:00" selected>
-                                                        {{ $i }}:00
+                                                <?php endif; ?>
+                                            <?php else: ?>
+                                                <?php if($row->waktu_selesai == $i . ':00:00'): ?>
+                                                    <option value="<?php echo e($i); ?>:00:00" selected>
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @else
-                                                    <option value="{{ $i }}:00:00">
-                                                        {{ $i }}:00
+                                                <?php else: ?>
+                                                    <option value="<?php echo e($i); ?>:00:00">
+                                                        <?php echo e($i); ?>:00
                                                     </option>
-                                                @endif
-                                            @endif
-                                        @endfor
+                                                <?php endif; ?>
+                                            <?php endif; ?>
+                                        <?php endfor; ?>
                                     </select>
                                 </div>
                             </div>
@@ -120,15 +121,15 @@
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
 
-                    @if ($row->pembayaran->status_pembayaran === 'Belum Lunas')
+                    <?php if($row->pembayaran->status_pembayaran === 'Belum Lunas'): ?>
                         <hr>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-12">
                                     <h5>Tambah Pembayaran</h5>
-                                    <form action="{{ url('/dashboard/pembayarandetails') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" name="reservasi_id" value="{{ $row->id }}">
+                                    <form action="<?php echo e(url('/dashboard/pembayarandetails')); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <input type="hidden" name="reservasi_id" value="<?php echo e($row->id); ?>">
             
                                         <div class="form-group">
                                             <label for="jumlah_pembayaran">Jumlah Pembayaran (Rp)</label>
@@ -139,11 +140,12 @@
                                             <label for="metode_pembayaran">Metode Pembayaran</label>
                                             <select name="metode_pembayaran" id="metode_pembayaran" class="form-control" required>
                                                 <option value="">-- Pilih Metode --</option>
-                                                @foreach ($metodePembayaran as $metode)
-                                                    <option value="{{ $metode }}" {{ old('metode_pembayaran') == $metode ? 'selected' : '' }}>
-                                                        {{ $metode }}
+                                                <?php $__currentLoopData = $metodePembayaran; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $metode): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                    <option value="<?php echo e($metode); ?>" <?php echo e(old('metode_pembayaran') == $metode ? 'selected' : ''); ?>>
+                                                        <?php echo e($metode); ?>
+
                                                     </option>
-                                                @endforeach
+                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                             </select>
                                         </div>
 
@@ -152,25 +154,25 @@
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </form>
         </div>
     </div>
 
-@endsection
+<?php $__env->stopSection(); ?>
 
-@if(session('success'))
+<?php if(session('success')): ?>
     <script>
         Swal.fire({
             icon: 'success',
             title: 'Berhasil',
-            text: '{{ session("success") }}',
+            text: '<?php echo e(session("success")); ?>',
         });
     </script>
-@endif
+<?php endif; ?>
 
-@section('script')
+<?php $__env->startSection('script'); ?>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('reservasiForm');
@@ -238,12 +240,14 @@
         });
     </script>
     <script>
-        @if (session('edit_gagal'))
+        <?php if(session('edit_gagal')): ?>
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
                 text: 'Jadwal sudah ada',
             });
-        @endif
+        <?php endif; ?>
     </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layout.main', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\laragon\www\futsal\resources\views/booking/edit.blade.php ENDPATH**/ ?>
