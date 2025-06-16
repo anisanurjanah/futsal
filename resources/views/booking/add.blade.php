@@ -32,6 +32,7 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
+                                <input type="hidden" name="status" value="Ditunda">
                                 <div class="form-group">
                                     <label>Nama Pelanggan</label>
                                     <select name="pelanggan_id" id="pelanggan_id" class="form-control select2" required>

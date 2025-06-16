@@ -34,10 +34,9 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <input type="hidden" name="id" value="<?php echo e($row->id); ?>">
-                                <input type="hidden" name="pelanggan_id" value="<?php echo e($row->id_pelanggan); ?>">
                                 <div class="form-group">
                                     <label>PELANGGAN</label>
-                                    <select name="pelanggan_id" id="pelanggan_id" class="form-control" required>
+                                    <select name="pelanggan_id" id="pelanggan_id" class="form-control" required data-old="<?php echo e(old('pelanggan_id', $row->pelanggan_id)); ?>>
                                         <option value="">--Pilih Pelanggan--</option>
                                         <?php $__currentLoopData = $pelanggan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($dt->id); ?>"
@@ -51,7 +50,7 @@
 
                                 <div class="form-group">
                                     <label>LAPANGAN</label>
-                                    <select name="lapangan_id" id="lapangan_id" class="form-control" required>
+                                    <select name="lapangan_id" id="lapangan_id" class="form-control" required data-old="<?php echo e(old('lapangan_id', $row->lapangan_id)); ?>">
                                         <option value="">--Pilih Lapangan--</option>
                                         <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $dt): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <option value="<?php echo e($dt->id); ?>"
@@ -71,7 +70,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="waktu_mulai">Waktu Mulai</label>
-                                    <select name="waktu_mulai" id="waktu_mulai" class="form-control" required data-old="<?php echo e($row->waktu_mulai ?? ''); ?>">
+                                    <select name="waktu_mulai" id="waktu_mulai" class="form-control" required data-old="<?php echo e(old('waktu_mulai', $row->waktu_mulai)); ?>">
                                         <option value="">Pilih Waktu Mulai</option>
                                         <?php for($i = 10; $i <= 21; $i++): ?>
                                             <?php
@@ -88,7 +87,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="waktu_selesai">Waktu Selesai</label>
-                                    <select name="waktu_selesai" id="waktu_selesai" class="form-control" required data-old="<?php echo e($row->waktu_selesai ?? ''); ?>">
+                                    <select name="waktu_selesai" id="waktu_selesai" class="form-control" required data-old="<?php echo e(old('waktu_selesai', $row->waktu_selesai)); ?>">
                                         <option value="">Pilih Waktu Selesai</option>
                                         <?php for($i = 10; $i <= 21; $i++): ?>
                                             <?php
@@ -199,9 +198,9 @@
             const sisaPembayaranBaruEl = document.getElementById('sisa_pembayaran_baru');
             const hargaLapangan = <?php echo json_encode($lapangan, 15, 512) ?>;
 
-            if (tanggalInput.value && document.getElementById('lapangan_id').value) {
-                // fetchAvailableTimes();
-            }
+            setTimeout(() => {
+                fetchAvailableTimes();
+            }, 100);
 
             // Fungsi untuk memfilter opsi waktu selesai
             function filterWaktuSelesai() {
@@ -256,8 +255,8 @@
                 const waktuMulai = document.getElementById('waktu_mulai');
                 const waktuSelesai = document.getElementById('waktu_selesai');
 
-                const waktuMulaiOld = waktuMulai.dataset.old || '';
-                const waktuSelesaiOld = waktuSelesai.dataset.old || '';
+                const waktuMulaiOld = waktuMulai.getAttribute('data-old') || waktuMulai.value;
+                const waktuSelesaiOld = waktuSelesai.getAttribute('data-old') || waktuSelesai.value;
 
                 fetch('<?php echo e(url("/cek-jadwal")); ?>', {
                     method: 'POST',
@@ -279,21 +278,29 @@
                         const option = document.createElement('option');
                         option.value = jam;
                         option.textContent = jam.substring(0, 5);
-                        if (jam === waktuMulaiOld) option.selected = true;
                         waktuMulai.appendChild(option);
                     });
 
                     if (waktuMulaiOld) {
+                        waktuMulai.value = waktuMulaiOld;
+                    }
+
+                    if (waktuMulai.value) {
                         const selectedHour = parseInt(waktuMulaiOld.split(':')[0]);
                         for (let i = selectedHour + 1; i <= 21; i++) {
                             const jam = `${i.toString().padStart(2, '0')}:00:00`;
                             const option = document.createElement('option');
                             option.value = jam;
                             option.textContent = jam.substring(0, 5);
-                            if (jam === waktuSelesaiOld) option.selected = true;
                             waktuSelesai.appendChild(option);
                         }
+
+                        if (waktuSelesaiOld) {
+                            waktuSelesai.value = waktuSelesaiOld;
+                        }
                     }
+
+                    hitungTotalHarga();
                 })
                 .catch(error => console.error('Gagal ambil jadwal:', error));
             }
@@ -303,13 +310,9 @@
                 const waktuMulaiEl = document.getElementById('waktu_mulai');
                 const waktuSelesaiEl = document.getElementById('waktu_selesai');
                 const totalEl = document.getElementById('total');
-                const hargaDpEl = document.getElementById('harga_dp');
-                const dpWrapper = document.getElementById('dp_wrapper');
 
                 if (!lapanganId || !waktuMulaiEl.value || !waktuSelesaiEl.value) {
                     totalEl.value = 'Rp 0';
-                    hargaDpEl.value = 'Rp 0';
-                    dpWrapper.classList.add('d-none');
                     return;
                 }
 
@@ -318,45 +321,36 @@
                 const total = harga * durasi;
 
                 totalEl.value = 'Rp ' + total.toLocaleString('id-ID');
-
-                // Cek jika tipe pembayaran adalah DP
-                const tipePembayaran = document.querySelector('input[name="tipe_pembayaran"]:checked')?.value;
-                if (tipePembayaran === 'dp') {
-                    hargaDpEl.value = 'Rp ' + (total / 2).toLocaleString('id-ID');
-                    dpWrapper.classList.remove('d-none');
-                } else {
-                    dpWrapper.classList.add('d-none');
-                    hargaDpEl.value = 'Rp 0';
-                }
             }
 
             function updateSisaPembayaran() {
                 const totalText = document.getElementById('total').value;
                 const jumlahPembayaran = parseInt(jumlahPembayaranEl.value || 0);
-                const jumlahPembayaranBaru = parseInt(jumlahPembayaranBaruEl.value || 0);
+                // const jumlahPembayaranBaru = parseInt(jumlahPembayaranBaruEl.value || 0);
 
                 const total = parseInt(totalText.replace(/[^\d]/g, '') || 0);
 
                 const sisa = total - jumlahPembayaran;
-                const sisaBaru = total - jumlahPembayaran - jumlahPembayaranBaruEl;
+                // const sisaBaru = total - jumlahPembayaran - jumlahPembayaranBaruEl;
                 
                 sisaPembayaranEl.value = 'Rp ' + (sisa > 0 ? sisa : 0).toLocaleString('id-ID');
-                sisaPembayaranBaruEl.value = 'Rp ' + (sisaBaru > 0 ? sisaBaru : 0).toLocaleString('id-ID');
+                // sisaPembayaranBaruEl.value = 'Rp ' + (sisaBaru > 0 ? sisaBaru : 0).toLocaleString('id-ID');
             }
 
             document.getElementById('lapangan_id').addEventListener('change', fetchAvailableTimes);
             document.getElementById('tanggal').addEventListener('change', fetchAvailableTimes);
 
             // Event listener untuk waktu mulai
-            // waktuMulai.addEventListener('change', function() {
-            //     filterWaktuSelesai();
-            // });
+            document.getElementById('waktu_mulai').addEventListener('change', function() {
+                filterWaktuSelesai();
+                hitungTotalHarga();
+            });
 
             // Event listener untuk waktu selesai
-            waktuSelesai.addEventListener('change', validateTime);
-
-            document.getElementById('waktu_mulai').addEventListener('change', hitungTotalHarga);
-            document.getElementById('waktu_selesai').addEventListener('change', hitungTotalHarga);
+            document.getElementById('waktu_selesai').addEventListener('change', function () {
+                validateTime();
+                hitungTotalHarga();
+            });
 
             document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
                 input.addEventListener('change', hitungTotalHarga);
@@ -371,6 +365,10 @@
                     e.preventDefault();
                 }
             });
+
+            if (document.getElementById('lapangan_id') && tanggalInput.value) {
+                fetchAvailableTimes();
+            }
         });
     </script>
     <script>

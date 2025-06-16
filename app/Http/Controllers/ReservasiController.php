@@ -10,7 +10,6 @@ use App\Models\Pembayaran;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\PembayaranDetail;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 
@@ -188,10 +187,15 @@ class ReservasiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
+        dd($request->all());
 
         $reservasi = Reservasi::findOrFail($id);
         $pembayaran = $reservasi->pembayaran;
+
+        $request->merge([
+            'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
+            'jumlah_pembayaran_baru' => str_replace('.', '', $request->jumlah_pembayaran_baru),
+        ]);
 
         // Base rules
         $rules = [

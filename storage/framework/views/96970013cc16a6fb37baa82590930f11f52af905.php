@@ -89,7 +89,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
             <a href="#" class="brand-link text-center">
-                <span class="brand-text text-white">FUTSAL</span>
+                <span class="brand-text text-white">FIT PLAZA</span>
             </a>
 
             <div class="sidebar">
