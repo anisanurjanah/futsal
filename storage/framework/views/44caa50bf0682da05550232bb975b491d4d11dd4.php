@@ -98,16 +98,13 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="total_harga">Total Harga</label>
-                                <input type="text" class="form-control" id="total_harga" name="total_harga" value="Rp 0" readonly disabled>
+                                <label for="total">Total</label>
+                                <input type="text" class="form-control" id="total" name="total" value="Rp 0" readonly disabled>
                             </div>
                             <div class="form-group d-none" id="dp_wrapper">
                                 <label for="harga_dp">Harga DP (50%)</label>
                                 <input type="text" class="form-control" id="harga_dp" value="Rp 0" readonly disabled>
                             </div>
-
-                            
-
                             <button type="submit" class="btn btn-primary">Buat Reservasi</button>
                         </form>
                     </div>
@@ -243,12 +240,12 @@
                 const lapanganRadio = document.querySelector('input[name="lapangan_id"]:checked');
                 const waktuMulaiEl = document.getElementById('waktu_mulai');
                 const waktuSelesaiEl = document.getElementById('waktu_selesai');
-                const totalHargaEl = document.getElementById('total_harga');
+                const totalEl = document.getElementById('total');
                 const hargaDpEl = document.getElementById('harga_dp');
                 const dpWrapper = document.getElementById('dp_wrapper');
 
                 if (!lapanganRadio || !waktuMulaiEl.value || !waktuSelesaiEl.value) {
-                    totalHargaEl.value = 'Rp 0';
+                    totalEl.value = 'Rp 0';
                     hargaDpEl.value = 'Rp 0';
                     dpWrapper.classList.add('d-none');
                     return;
@@ -259,7 +256,7 @@
                 const durasi = parseInt(waktuSelesaiEl.value.split(':')[0]) - parseInt(waktuMulaiEl.value.split(':')[0]);
                 const total = harga * durasi;
 
-                totalHargaEl.value = 'Rp ' + total.toLocaleString('id-ID');
+                totalEl.value = 'Rp ' + total.toLocaleString('id-ID');
 
                 // Cek jika tipe pembayaran adalah DP
                 const tipePembayaran = document.querySelector('input[name="tipe_pembayaran"]:checked')?.value;

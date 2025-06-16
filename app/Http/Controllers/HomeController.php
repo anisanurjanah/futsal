@@ -209,7 +209,6 @@ class HomeController extends Controller
 
         return false;
     }
-
     
     public function createSnapToken($orderId, $grossAmount, $customerName, $email, $phone)
     {

@@ -6,10 +6,13 @@ use DateTime;
 use App\Models\Lapangan;
 use App\Models\Pelanggan;
 use App\Models\Reservasi;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use App\Models\Pembayaran;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\PembayaranDetail;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class ReservasiController extends Controller
 {
@@ -55,8 +58,13 @@ class ReservasiController extends Controller
     {
         $pelanggan = Pelanggan::all();
         $lapangan = Lapangan::all();
+        $metodePembayaran = Pembayaran::METODE_PEMBAYARAN;
 
-        return view('booking.add', ['pelanggan' => $pelanggan, 'lapangan' => $lapangan]);
+        return view('booking.add', [
+            'pelanggan' => $pelanggan, 
+            'lapangan' => $lapangan,
+            'metodePembayaran' => $metodePembayaran,
+        ]);
     }
 
     /**
@@ -67,58 +75,72 @@ class ReservasiController extends Controller
      */
     public function store(Request $request)
     {
-        date_default_timezone_set('Asia/Jakarta');
-        $cekJadwal = DB::table('tbl_reservasi')
-            ->where('id_lapangan', $request->idlapangan)
-            ->where('tanggal', $request->tanggal)
+        // dd($request->all());
 
-            ->where(function ($query) use ($request) {
-                $query
-                    // 1. waktu_mulai input berada di dalam jadwal lama
-                    ->where(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '<=', $request->waktu_mulai)
-                            ->where('waktu_selesai', '>', $request->waktu_mulai); // pakai > supaya sama tidak bentrok
-                    })
-                    // 2. waktu_selesai input berada di dalam jadwal lama
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '<', $request->waktu_selesai) // pakai < supaya sama tidak bentrok
-                            ->where('waktu_selesai', '>=', $request->waktu_selesai);
-                    })
-                    // 3. jadwal lama di dalam input (input mencakup jadwal lama)
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '>=', $request->waktu_mulai)
-                            ->where('waktu_selesai', '<=', $request->waktu_selesai);
-                    });
-            })
-            ->exists();
-
-
-        if ($cekJadwal) {
-            return redirect()->back()->with('add_gagal', 1);
-        }
-
-        $time1 = new DateTime($request->waktu_mulai);
-        $time2 = new DateTime($request->waktu_selesai);
-        $interval = $time2->diff($time1);
-        $durasi = (int)$interval->format('%h');
-
-        if ($request->statustransaksi == 'Belum Lunas') {
-            DB::table('tbl_notifikasi')->insert([
-                'pesan' => 'Ada reservasi baru yang belum lunas',
-            ]);
-        }
-
-
-        DB::table('tbl_reservasi')->insert([
-            'id_pelanggan' => $request->idmember,
-            'id_lapangan' => $request->idlapangan,
-            'status' => $request->statustransaksi,
-            'tanggal' => $request->tanggal,
-            'waktu_mulai' => $request->waktu_mulai,
-            'waktu_selesai' => $request->waktu_selesai,
+        $validated = $request->validate([
+            'lapangan_id' => 'required|exists:lapangans,id',
+            'pelanggan_id' => 'required|exists:pelanggans,id',
+            'tanggal'         => 'required|date|after_or_equal:today',
+            'waktu_mulai'     => 'required|date_format:H:i:s',
+            'waktu_selesai'   => 'required|date_format:H:i:s|after:waktu_mulai',
+            'tipe_pembayaran' => 'required|in:dp,lunas',
+            'jumlah_pembayaran' => 'required|numeric|min:0',
+            'metode_pembayaran' => ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])],
+        ], [
+            'lapangan_id.required'  => 'Lapangan harus dipilih.',
+            'tanggal.after_or_equal'  => 'Tanggal harus hari ini atau setelahnya.',
+            'waktu_selesai.after'     => 'Waktu selesai harus lebih dari waktu mulai.',
+            'tipe_pembayaran.required' => 'Tipe pembayaran harus dipilih.',
+            'tipe_pembayaran.in' => 'Tipe pembayaran tidak valid.',
+            'metode_pembayaran.required' => 'Metode pembayaran harus dipilih.',
+            'metode_pembayaran.in'       => 'Metode pembayaran tidak valid.',
         ]);
 
-        return redirect('booking/index')->with('add_sukses', 1);
+        if ($this->checkReservasiTime($validated['tanggal'], $validated['lapangan_id'], $validated['waktu_mulai'], $validated['waktu_selesai'])) {
+            return redirect()->back()->with('add_gagal', 'Waktu tersebut sudah dipesan. Silakan pilih waktu lain.');
+        }
+    
+        // Cek data pelanggan
+        $pelanggan = Pelanggan::find($validated['pelanggan_id']);
+
+        $lapangan = Lapangan::find($validated['lapangan_id']);
+        $hargaPerJam = $lapangan->price;
+        $durasi = (int) explode(':', $validated['waktu_selesai'])[0] - (int) explode(':', $validated['waktu_mulai'])[0];
+        $totalHarga = $hargaPerJam * $durasi;
+
+        $reservasi = Reservasi::create([
+            'pelanggan_id' => $pelanggan->id,
+            'lapangan_id' => $validated['lapangan_id'],
+            'tanggal' => $validated['tanggal'],
+            'waktu_mulai' => $validated['waktu_mulai'],
+            'waktu_selesai' => $validated['waktu_selesai'],
+            'status' => 'Ditunda',
+        ]);
+
+        $pembayaranSekarang = $totalHarga;
+        $sisaPembayaran = 0;
+
+        if ($validated['tipe_pembayaran'] === 'dp') {
+            $pembayaranSekarang = (int) str_replace('.', '', $validated['jumlah_pembayaran']);
+            $sisaPembayaran = max(0, $totalHarga - $pembayaranSekarang);
+        }
+
+        $pembayaran = Pembayaran::create([
+            'reservasi_id' => $reservasi->id,
+            'tanggal_pembayaran' => now()->toDateString(),
+            'total_pembayaran' => $totalHarga,
+            'sisa_pembayaran' => $sisaPembayaran,
+            'status_pembayaran' => $sisaPembayaran > 0 ? 'Belum Lunas' : 'Lunas'
+        ]);
+
+        PembayaranDetail::create([
+            'pembayaran_id' => $pembayaran->id,
+            'tanggal_pembayaran' => now()->toDateString(),
+            'jumlah_pembayaran' => $pembayaranSekarang,
+            'metode_pembayaran' => $validated['metode_pembayaran'],
+        ]);
+
+        return redirect('/dashboard/reservasi')->with('add_sukses', 1);
     }
 
     /**
@@ -166,47 +188,85 @@ class ReservasiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cekJadwal = DB::table('tbl_reservasi')
-            ->where('id', '!=', $request->id)
-            ->where('id_lapangan', $request->id_lapangan)
-            ->where('tanggal', $request->tanggal)
-            ->where(function ($query) use ($request) {
-                $query
-                    // 1. waktu_mulai input berada di dalam jadwal lama
-                    ->where(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '<=', $request->waktu_mulai)
-                            ->where('waktu_selesai', '>', $request->waktu_mulai); // pakai > supaya sama tidak bentrok
-                    })
-                    // 2. waktu_selesai input berada di dalam jadwal lama
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '<', $request->waktu_selesai) // pakai < supaya sama tidak bentrok
-                            ->where('waktu_selesai', '>=', $request->waktu_selesai);
-                    })
-                    // 3. jadwal lama di dalam input (input mencakup jadwal lama)
-                    ->orWhere(function ($q) use ($request) {
-                        $q->where('waktu_mulai', '>=', $request->waktu_mulai)
-                            ->where('waktu_selesai', '<=', $request->waktu_selesai);
-                    });
-            })
-            ->exists();
+        // dd($request->all());
 
+        $reservasi = Reservasi::findOrFail($id);
+        $pembayaran = $reservasi->pembayaran;
 
+        // Base rules
+        $rules = [
+            'lapangan_id' => 'required|exists:lapangans,id',
+            'pelanggan_id' => 'required|exists:pelanggans,id',
+            'tanggal'         => 'required|date|after_or_equal:today',
+            'waktu_mulai'     => 'required|date_format:H:i:s',
+            'waktu_selesai'   => 'required|date_format:H:i:s|after:waktu_mulai',
+            'jumlah_pembayaran' => 'required|numeric|min:0',
+            'metode_pembayaran' => ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])],
+        ];
 
-        if ($cekJadwal) {
-            return redirect()->back()->with('edit_gagal', 1);
+        $messages = [
+            'lapangan_id.required'  => 'Lapangan harus dipilih.',
+            'tanggal.after_or_equal'  => 'Tanggal harus hari ini atau setelahnya.',
+            'waktu_selesai.after'     => 'Waktu selesai harus lebih dari waktu mulai.',
+            'metode_pembayaran.required' => 'Metode pembayaran harus dipilih.',
+            'metode_pembayaran.in'       => 'Metode pembayaran tidak valid.',
+            'jumlah_pembayaran_baru.required' => 'Jumlah pembayaran baru harus diisi.',
+            'metode_pembayaran_baru.required' => 'Metode pembayaran baru harus dipilih.',
+        ];
+
+        if ($pembayaran && $pembayaran->status_pembayaran === 'Belum Lunas') {
+            $rules['jumlah_pembayaran_baru'] = 'required|numeric|min:0';
+            $rules['metode_pembayaran_baru'] = ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])];
         }
 
-        DB::table('tbl_reservasi')
-            ->where('id', $request->id)
-            ->update([
-                'id_lapangan' => $request->id_lapangan,
-                'status' => $request->statustransaksi,
-                'tanggal' => $request->tanggal,
-                'waktu_mulai' => $request->waktu_mulai,
-                'waktu_selesai' => $request->waktu_selesai,
+        $validated = $request->validate($rules, $messages);
+
+        if ($this->checkReservasiTime($validated['tanggal'], $validated['lapangan_id'], $validated['waktu_mulai'], $validated['waktu_selesai'])) {
+            return redirect()->back()->with('add_gagal', 'Waktu tersebut sudah dipesan. Silakan pilih waktu lain.');
+        }
+    
+        // Cek data pelanggan
+        $pelanggan = Pelanggan::find($validated['pelanggan_id']);
+        
+        $reservasi->update([
+            'pelanggan_id' => $pelanggan->id,
+            'lapangan_id' => $validated['lapangan_id'],
+            'tanggal' => $validated['tanggal'],
+            'waktu_mulai' => $validated['waktu_mulai'],
+            'waktu_selesai' => $validated['waktu_selesai'],
+            'status' => 'Ditunda',
+        ]);
+
+        $lapangan = Lapangan::find($validated['lapangan_id']);
+        $hargaPerJam = $lapangan->price;
+        $durasi = (int) explode(':', $validated['waktu_selesai'])[0] - (int) explode(':', $validated['waktu_mulai'])[0];
+        $totalHarga = $hargaPerJam * $durasi;
+    
+        if ($pembayaran) {
+            $jumlahBaru = (int) str_replace('.', '', $validated['jumlah_pembayaran_baru']);
+
+            $pembayaran->pembayaranDetail()->create([
+                'pembayaran_id' => $pembayaran->id,
+                'tanggal_pembayaran' => now()->toDateString(),
+                'jumlah_pembayaran' => $jumlahBaru,
+                'metode_pembayaran' => $validated['metode_pembayaran_baru'],
             ]);
 
-        return redirect('booking/index')->with('edit_sukses', 1);
+            Log::info('Pembayaran detail berhasil dibuat.');
+
+            $totalDibayar = $pembayaran->pembayaranDetail->sum('jumlah_pembayaran');
+            $sisaPembayaran = max(0, $totalHarga - $totalDibayar);
+            $status = $sisaPembayaran <= 0 ? 'Lunas' : 'Belum Lunas';
+
+            $pembayaran->update([
+                'tanggal_pembayaran' => now()->toDateString(),
+                'total_pembayaran' => $totalHarga,
+                'sisa_pembayaran' => $sisaPembayaran,
+                'status_pembayaran' => $status,
+            ]);
+        }
+
+        return redirect('/dashboard/reservasi')->with('edit_sukses', 1);
     }
 
     /**
@@ -221,5 +281,24 @@ class ReservasiController extends Controller
         $reservasi->delete();
         
         return redirect()->back()->with('delete_sukses', 1);
+    }
+
+    public function checkReservasiTime($tanggal, $lapangan, $waktuMulaiInput, $waktuSelesaiInput)
+    {
+        $reservasi = Reservasi::where('tanggal', $tanggal)
+            ->where('lapangan_id', $lapangan)
+            ->get();
+
+        foreach ($reservasi as $res) {
+            if (
+                ($waktuMulaiInput >= $res->waktu_mulai && $waktuMulaiInput < $res->waktu_selesai) ||
+                ($waktuSelesaiInput > $res->waktu_mulai && $waktuSelesaiInput <= $res->waktu_selesai) ||
+                ($waktuMulaiInput <= $res->waktu_mulai && $waktuSelesaiInput >= $res->waktu_selesai)
+            ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
