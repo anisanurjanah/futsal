@@ -46,16 +46,12 @@
                         </div>
                     </div>
 
-
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
 @endsection

@@ -19,8 +19,10 @@
                 <div class="col-md">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <!-- THE CALENDAR -->
-                            <div id="calendar"></div>
+                            <div class="col-12 p-4">
+                                <!-- THE CALENDAR -->
+                                <div id="calendar"></div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>

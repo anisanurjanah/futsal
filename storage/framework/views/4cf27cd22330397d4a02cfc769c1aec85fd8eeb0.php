@@ -34,7 +34,7 @@
                             <td><?php echo e($item->email); ?></td>
                             <td><?php echo e($item->role); ?></td>
                             <td class="text-center">
-                                <a href="<?php echo e(url('/dashboard/pengguna/' . $item->id . '/edit')); ?>" class="btn btn-sm btn-warning"
+                                <a href="<?php echo e(url('/dashboard/pengguna/' . $item->id . '/edit')); ?>" class="btn btn-xs btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i>
                                 </a>
                                 <form id="delete-form-<?php echo e($item->id); ?>" action="<?php echo e(url('/dashboard/pengguna/' . $item->id)); ?>" method="POST" style="display: none;">

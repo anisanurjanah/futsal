@@ -182,9 +182,7 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
-
         </aside>
 
         <div class="content-wrapper">
@@ -199,7 +197,6 @@
             </section>
         </div>
 
-
         <footer class="main-footer">
 
             <div class="float-right d-none d-sm-inline">
@@ -209,8 +206,6 @@
             reserved.
         </footer>
     </div>
-
-
 
     
 
@@ -244,9 +239,6 @@
     <script src="<?php echo e(asset('adminlte')); ?>/plugins/moment/moment.min.js"></script>
     <script src="<?php echo e(asset('adminlte')); ?>/plugins/fullcalendar/main.js"></script>
 
-
-
-
     <script>
         $(function() {
             $('#table1').DataTable({
@@ -265,46 +257,7 @@
             })
         });
     </script>
-    <script>
-        const notifikasiInner = document.getElementById('notifikasiInner');
-        let datas = [];
-
-        setInterval(() => {
-            $.ajax({
-                url: '<?php echo e(route('notifikasi')); ?>',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-
-                    if (Array.isArray(data)) {
-                        data.forEach(item => {
-                            if (!item.is_read && !datas.find(d => d.id === item.id)) {
-                                datas.push(item);
-                            }
-                        });
-                    } else {
-                        if (!data.is_read && !datas.find(d => d.id === data.id)) {
-                            datas.push(data);
-                        }
-                    }
-
-                    notifikasiInner.innerHTML = datas.map(item => `
-                        <li>
-                            <a href="/booking/index" class="dropdown-item">
-                                ${item.pesan}
-                            </a>
-                        </li>
-                    `).join('');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Gagal fetch:', error);
-                }
-            });
-        }, 1000);
-    </script>
-
-
+    
 
     <?php echo $__env->yieldContent('script'); ?>
 

@@ -63,7 +63,7 @@
 
                                 <div class="form-group mb-3">
                                     <label for="tanggal">Tanggal</label>
-                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required min="<?php echo e(date('Y-m-d')); ?>">
                                 </div>
 
                                 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4">

@@ -13,8 +13,7 @@
 <?php $__env->startSection('content'); ?>
 
     <div class="row">
-
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -32,13 +31,11 @@
                     </div>
                 </div>
                 <div class="card-body">
-
                     <form action="<?php echo e(url('/dashboard/pengguna/' . $row->id)); ?>" method="post">
                         <?php echo method_field('PUT'); ?>
                         <?php echo csrf_field(); ?>
                         <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="hidden" name="id" value="<?php echo e($row->id); ?>">

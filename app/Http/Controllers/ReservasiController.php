@@ -12,6 +12,7 @@ use Illuminate\Validation\Rule;
 use App\Models\PembayaranDetail;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
 
 class ReservasiController extends Controller
 {
@@ -187,14 +188,14 @@ class ReservasiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($request->all());
+        // dd($request->all());
 
         $reservasi = Reservasi::findOrFail($id);
-        $pembayaran = $reservasi->pembayaran;
+        $pembayaran = $reservasi->pembayaran()->latest()->first()?->fresh();
 
         $request->merge([
-            'jumlah_pembayaran' => str_replace('.', '', $request->jumlah_pembayaran),
-            'jumlah_pembayaran_baru' => str_replace('.', '', $request->jumlah_pembayaran_baru),
+            'jumlah_pembayaran' => (int) str_replace('.', '', $request->jumlah_pembayaran),
+            'jumlah_pembayaran_baru' => (int) str_replace('.', '', $request->jumlah_pembayaran_baru),
         ]);
 
         // Base rules
@@ -205,62 +206,101 @@ class ReservasiController extends Controller
             'waktu_mulai'     => 'required|date_format:H:i:s',
             'waktu_selesai'   => 'required|date_format:H:i:s|after:waktu_mulai',
             'jumlah_pembayaran' => 'required|numeric|min:0',
-            'metode_pembayaran' => ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])],
+            // 'jumlah_pembayaran_baru' => 'required|numeric|min:0',
+            // 'metode_pembayaran_baru' => ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])],
         ];
-
+        
         $messages = [
             'lapangan_id.required'  => 'Lapangan harus dipilih.',
             'tanggal.after_or_equal'  => 'Tanggal harus hari ini atau setelahnya.',
             'waktu_selesai.after'     => 'Waktu selesai harus lebih dari waktu mulai.',
             'metode_pembayaran.required' => 'Metode pembayaran harus dipilih.',
             'metode_pembayaran.in'       => 'Metode pembayaran tidak valid.',
-            'jumlah_pembayaran_baru.required' => 'Jumlah pembayaran baru harus diisi.',
-            'metode_pembayaran_baru.required' => 'Metode pembayaran baru harus dipilih.',
+            // 'jumlah_pembayaran_baru.required' => 'Jumlah pembayaran baru harus diisi.',
+            // 'metode_pembayaran_baru.required' => 'Metode pembayaran baru harus dipilih.',
         ];
-
+        
         if ($pembayaran && $pembayaran->status_pembayaran === 'Belum Lunas') {
             $rules['jumlah_pembayaran_baru'] = 'required|numeric|min:0';
             $rules['metode_pembayaran_baru'] = ['required', Rule::in(['Tunai', 'Bank Transfer', 'QRIS'])];
         }
-
-        $validated = $request->validate($rules, $messages);
-
-        if ($this->checkReservasiTime($validated['tanggal'], $validated['lapangan_id'], $validated['waktu_mulai'], $validated['waktu_selesai'])) {
-            return redirect()->back()->with('add_gagal', 'Waktu tersebut sudah dipesan. Silakan pilih waktu lain.');
+        
+        $validator = Validator::make($request->all(), $rules, $messages);
+        
+        if ($validator->fails()) {
+            Log::error('VALIDATION FAILED', $validator->errors()->toArray());
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        
+        $validated = $validator->validated();
+        Log::info('VALIDATED DATA', $validated);
+        
+        if ($this->checkReservasiTime($validated['tanggal'], $validated['lapangan_id'], $validated['waktu_mulai'], $validated['waktu_selesai'], $reservasi->id)) {
+            return redirect()->back()->with('edit_gagal', 'Waktu tersebut sudah dipesan. Silakan pilih waktu lain.');
         }
     
         // Cek data pelanggan
         $pelanggan = Pelanggan::find($validated['pelanggan_id']);
         
-        $reservasi->update([
-            'pelanggan_id' => $pelanggan->id,
-            'lapangan_id' => $validated['lapangan_id'],
-            'tanggal' => $validated['tanggal'],
-            'waktu_mulai' => $validated['waktu_mulai'],
-            'waktu_selesai' => $validated['waktu_selesai'],
-            'status' => 'Ditunda',
-        ]);
+        $reservasi->update($validated);
 
         $lapangan = Lapangan::find($validated['lapangan_id']);
         $hargaPerJam = $lapangan->price;
         $durasi = (int) explode(':', $validated['waktu_selesai'])[0] - (int) explode(':', $validated['waktu_mulai'])[0];
         $totalHarga = $hargaPerJam * $durasi;
+
+        // if ($pembayaran && $pembayaran->status_pembayaran === 'Belum Lunas') {
+        //     $pembayaran->pembayaranDetail->pembayaran_id += $pembayaran->id;
+        //     $pembayaran->pembayaranDetail->jumlah_pembayaran += $validated['jumlah_pembayaran_baru'];
+        //     $pembayaran->pembayaranDetail->tanggal_pembayaran += now()->toDateString();
+        //     $pembayaran->pembayaranDetail->metode_pembayaran = $validated['metode_pembayaran_baru'];
+        //     $pembayaran->save();
+        // }
+
+        Log::info('CEK PEMBAYARAN STATUS FINAL', [
+    'status' => $pembayaran?->status_pembayaran,
+    'id' => $pembayaran?->id,
+]);
     
-        if ($pembayaran) {
+        if ($pembayaran && $pembayaran->status_pembayaran === 'Belum Lunas') {
             $jumlahBaru = (int) str_replace('.', '', $validated['jumlah_pembayaran_baru']);
 
-            $pembayaran->pembayaranDetail()->create([
-                'pembayaran_id' => $pembayaran->id,
-                'tanggal_pembayaran' => now()->toDateString(),
-                'jumlah_pembayaran' => $jumlahBaru,
-                'metode_pembayaran' => $validated['metode_pembayaran_baru'],
-            ]);
+            Log::info('MENCOBA BUAT PEMBAYARAN DETAIL', $validated);
 
-            Log::info('Pembayaran detail berhasil dibuat.');
+            // $pembayaran->pembayaranDetail()->create([
+            //     'tanggal_pembayaran' => now()->toDateString(),
+            //     'jumlah_pembayaran' => $jumlahBaru,
+            //     'metode_pembayaran' => $validated['metode_pembayaran_baru'],
+            // ]);
 
-            $totalDibayar = $pembayaran->pembayaranDetail->sum('jumlah_pembayaran');
+            try {
+                Log::info('TRY CREATE PEMBAYARAN DETAIL');
+
+                $pembayaran->pembayaranDetail()->create([
+                    'pembayaran_id' => $pembayaran->id,
+                    'tanggal_pembayaran' => now()->toDateString(),
+                    'jumlah_pembayaran' => $jumlahBaru,
+                    'metode_pembayaran' => $validated['metode_pembayaran_baru'],
+                ]);
+
+                Log::info('CREATE BERHASIL');
+            } catch (\Exception $e) {
+                Log::error('GAGAL CREATE PEMBAYARAN DETAIL', [
+                    'message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+
+
+            $totalDibayar = $pembayaran->pembayaranDetail()->sum('jumlah_pembayaran');
             $sisaPembayaran = max(0, $totalHarga - $totalDibayar);
             $status = $sisaPembayaran <= 0 ? 'Lunas' : 'Belum Lunas';
+
+            Log::info('TOTAL DIBAYAR & SISA', [
+                'total_dibayar' => $totalDibayar,
+                'total_harga' => $totalHarga,
+                'sisa_pembayaran' => $sisaPembayaran,
+            ]);
 
             $pembayaran->update([
                 'tanggal_pembayaran' => now()->toDateString(),
@@ -287,11 +327,16 @@ class ReservasiController extends Controller
         return redirect()->back()->with('delete_sukses', 1);
     }
 
-    public function checkReservasiTime($tanggal, $lapangan, $waktuMulaiInput, $waktuSelesaiInput)
+    public function checkReservasiTime($tanggal, $lapangan, $waktuMulaiInput, $waktuSelesaiInput, $exceptId = null)
     {
-        $reservasi = Reservasi::where('tanggal', $tanggal)
-            ->where('lapangan_id', $lapangan)
-            ->get();
+        $query = Reservasi::where('tanggal', $tanggal)
+            ->where('lapangan_id', $lapangan);
+
+        if ($exceptId) {
+            $query->where('id', '!=', $exceptId);
+        }
+
+        $reservasi = $query->get();
 
         foreach ($reservasi as $res) {
             if (

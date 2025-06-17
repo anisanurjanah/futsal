@@ -45,22 +45,15 @@
                                         autocomplete="off" value="{{ $row->price }}" required>
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
-
 
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Update</button>
                     </div>
                 </div>
-
             </form>
-
         </div>
-
     </div>
 
 @endsection

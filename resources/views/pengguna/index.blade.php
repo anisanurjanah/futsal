@@ -36,7 +36,7 @@
                             <td>{{ $item->email }}</td>
                             <td>{{ $item->role }}</td>
                             <td class="text-center">
-                                <a href="{{ url('/dashboard/pengguna/' . $item->id . '/edit') }}" class="btn btn-sm btn-warning"
+                                <a href="{{ url('/dashboard/pengguna/' . $item->id . '/edit') }}" class="btn btn-xs btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i>
                                 </a>
                                 <form id="delete-form-{{ $item->id }}" action="{{ url('/dashboard/pengguna/' . $item->id) }}" method="POST" style="display: none;">

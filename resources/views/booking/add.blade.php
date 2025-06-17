@@ -14,7 +14,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md">
+        <div class="col-12">
             <form action="{{ url('/dashboard/reservasi') }}" method="post" id="bookingForm">
                 <div class="card">
                     <div class="card-header">
@@ -30,8 +30,8 @@
 
                     <div class="card-body">
                         @csrf
-                        <div class="row">
-                            <div class="col-md-12">
+                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-5">
+                            <div class="col-md-6 px-4">
                                 <input type="hidden" name="status" value="Ditunda">
                                 <div class="form-group">
                                     <label>Nama Pelanggan</label>
@@ -78,6 +78,9 @@
                                         @endfor
                                     </select>
                                 </div>
+                            </div>
+
+                            <div class="col-md-6 px-4">
                                 <div class="form-group mb-3">
                                     <label class="d-block">Pembayaran</label>
                                     <div class="form-check">
@@ -124,10 +127,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="d-flex justify-content-end p-3">
+                            <button type="submit" class="btn btn-primary px-4">Simpan</button>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -137,7 +140,6 @@
 @endsection
 
 @section('script')
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('bookingForm');
@@ -149,9 +151,32 @@
             const sisaPembayaranEl = document.getElementById('sisa_pembayaran');
             const hargaLapangan = @json($lapangan);
 
+            // Setelah semua element diambil
             if (tanggalInput.value && document.getElementById('lapangan_id').value) {
                 fetchAvailableTimes();
             }
+
+            document.getElementById('lapangan_id').addEventListener('change', fetchAvailableTimes);
+            tanggalInput.addEventListener('change', function() {
+                fetchAvailableTimes();
+            });
+            
+            // Event listener untuk waktu selesai
+            waktuMulai.addEventListener('change', hitungTotalHarga);
+            waktuSelesai.addEventListener('change', function() {
+                validateTime();
+                hitungTotalHarga();
+            });
+
+            document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
+                input.addEventListener('change', hitungTotalHarga);
+            });
+
+            jumlahPembayaranEl.addEventListener('input', updateSisaPembayaran);
+
+            $('#pelanggan_id').select2({
+                width: '100%'
+            });
 
             // Fungsi untuk memfilter opsi waktu selesai
             function filterWaktuSelesai() {
@@ -221,10 +246,19 @@
                     waktuMulai.innerHTML = '<option value="">Pilih Waktu Mulai</option>';
                     waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
 
-                    data.forEach(jam => {
+                    const waktuTersedia = data.map(item => item.jam);
+                    const waktuTerisi = data.filter(item => item.disabled).map(item => item.jam);
+
+                    data.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = jam;
-                        option.textContent = jam.substring(0, 5);
+                        option.value = item.jam;
+                        option.textContent = item.jam.substring(0, 5);
+
+                        if (item.disabled) {
+                            option.disabled = true;
+                            option.textContent += ' (Terisi)';
+                        }
+
                         waktuMulai.appendChild(option);
                     });
 
@@ -232,12 +266,26 @@
                         const selectedHour = parseInt(this.value.split(':')[0]);
                         waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
 
-                        for (let i = selectedHour + 1; i <= 21; i++) {
-                            const jam = `${i.toString().padStart(2, '0')}:00:00`;
-                            const option = document.createElement('option');
-                            option.value = jam;
-                            option.textContent = jam.substring(0, 5);
-                            waktuSelesai.appendChild(option);
+                        for (let i = selectedHour + 1; i <= 20; i++) {
+                            const jamMulai = selectedHour;
+                            const jamSelesai = i;
+                            let konflik = false;
+
+                            for (let jam = jamMulai; jam < jamSelesai; jam++) {
+                                const jamCheck = `${jam.toString().padStart(2, '0')}:00:00`;
+                                if (waktuTerisi.includes(jamCheck)) {
+                                    konflik = true;
+                                    break;
+                                }
+                            }
+
+                            if (!konflik) {
+                                const jam = `${jamSelesai.toString().padStart(2, '0')}:00:00`;
+                                const option = document.createElement('option');
+                                option.value = jam;
+                                option.textContent = jam.substring(0, 5);
+                                waktuSelesai.appendChild(option);
+                            }
                         }
                     })
                 })
@@ -287,27 +335,6 @@
                 const sisa = total - jumlahPembayaran;
                 sisaPembayaranEl.value = 'Rp ' + (sisa > 0 ? sisa : 0).toLocaleString('id-ID');
             }
-
-            document.getElementById('lapangan_id').addEventListener('change', fetchAvailableTimes);
-            document.getElementById('tanggal').addEventListener('change', fetchAvailableTimes);
-
-            // Event listener untuk waktu mulai
-            // waktuMulai.addEventListener('change', function() {
-            //     filterWaktuSelesai();
-            //     hitungTotalHarga();
-            // });
-
-            // Event listener untuk waktu selesai
-            waktuSelesai.addEventListener('change', validateTime);
-
-            document.getElementById('waktu_mulai').addEventListener('change', hitungTotalHarga);
-            document.getElementById('waktu_selesai').addEventListener('change', hitungTotalHarga);
-
-            document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
-                input.addEventListener('change', hitungTotalHarga);
-            });
-
-            jumlahPembayaranEl.addEventListener('input', updateSisaPembayaran);
 
             // Event listener untuk form submission
             form.addEventListener('submit', function(e) {

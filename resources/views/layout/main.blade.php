@@ -181,9 +181,7 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
-
         </aside>
 
         <div class="content-wrapper">
@@ -198,7 +196,6 @@
             </section>
         </div>
 
-
         <footer class="main-footer">
 
             <div class="float-right d-none d-sm-inline">
@@ -208,8 +205,6 @@
             reserved.
         </footer>
     </div>
-
-
 
     {{-- <script src="{{ asset('adminlte') }}/plugins/jquery/jquery.min.js"></script>
 
@@ -247,9 +242,6 @@
     <script src="{{ asset('adminlte') }}/plugins/moment/moment.min.js"></script>
     <script src="{{ asset('adminlte') }}/plugins/fullcalendar/main.js"></script>
 
-
-
-
     <script>
         $(function() {
             $('#table1').DataTable({
@@ -268,7 +260,7 @@
             })
         });
     </script>
-    <script>
+    {{-- <script>
         const notifikasiInner = document.getElementById('notifikasiInner');
         let datas = [];
 
@@ -305,9 +297,7 @@
                 }
             });
         }, 1000);
-    </script>
-
-
+    </script> --}}
 
     @yield('script')
 

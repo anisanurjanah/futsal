@@ -52,4 +52,5 @@ Route::group(['middleware' => 'AdminMiddleware'], function () {
 
     Route::get('/dashboard/keuangan', [LaporanController::class, 'keuangan']);
     Route::get('/dashboard/keuangan/export-pdf', [LaporanController::class, 'exportPDF']);
+    Route::put('/dashboard/reservasi/{id}', [ReservasiController::class, 'update'])->name('reservasi.update');
 });
