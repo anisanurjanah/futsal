@@ -58,6 +58,9 @@ class HomeController extends Controller
 
         $reservasi = Reservasi::where('tanggal', $tanggal)
             ->where('lapangan_id', $lapanganId)
+            ->when($request->except_id, function ($query) use ($request) {
+                $query->where('id', '!=', $request->except_id);
+            })
             ->get();
 
         $waktuTerpakai = [];

@@ -74,7 +74,7 @@
                                     <label for="waktu_mulai">Waktu Mulai</label>
                                     <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
                                         <option value="">Pilih Waktu Mulai</option>
-                                        @for ($i = 10; $i <= 21; $i++)
+                                        @for ($i = 10; $i <= 20; $i++)
                                             @php
                                                 $value = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00:00';
                                                 $label = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00';
@@ -90,7 +90,7 @@
                                     <label for="waktu_selesai">Waktu Selesai</label>
                                     <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
                                         <option value="">Pilih Waktu Selesai</option>
-                                        @for ($i = 10; $i <= 21; $i++)
+                                        @for ($i = 11; $i <= 21; $i++)
                                             @php
                                                 $value = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00:00';
                                                 $label = str_pad($i, 2, '0', STR_PAD_LEFT) . ':00';
@@ -211,8 +211,8 @@
             jumlahPembayaranEl.addEventListener('input', updateSisaPembayaran);
             
             if (jumlahPembayaranBaruEl) {
-                    jumlahPembayaranBaruEl.addEventListener('input', updateSisaPembayaran);
-                }
+                jumlahPembayaranBaruEl.addEventListener('input', updateSisaPembayaran);
+            }
 
             $('#pelanggan_id').select2({
                 width: '100%'
@@ -274,6 +274,7 @@
             function fetchAvailableTimes() {
                 const tanggal = tanggalInput.value;
                 const lapanganId = document.getElementById('lapangan_id').value;
+                const reservasiId = document.getElementById('id')?.value;
 
                 if (!tanggal || !lapanganId) return;
 
@@ -285,7 +286,8 @@
                     },
                     body: JSON.stringify({
                         tanggal: tanggal,
-                        lapangan_id: lapanganId
+                        lapangan_id: lapanganId,
+                        except_id: id
                     })
                 })
                 .then(response => response.json())
@@ -294,6 +296,8 @@
 
                     const waktuMulaiLama = document.getElementById('waktuMulaiLama')?.value;
                     const waktuSelesaiLama = document.getElementById('waktuSelesaiLama')?.value;
+
+                    const waktuTerisi = data.filter(item => item.disabled).map(item => item.jam);
 
                     waktuMulai.innerHTML = '<option value="">Pilih Waktu Mulai</option>';
 
@@ -322,6 +326,33 @@
                         waktuSelesai.dispatchEvent(new Event('change'));
                         waktuMulai.dispatchEvent(new Event('change'));
                     }
+
+                    waktuMulai.addEventListener('change', function() {
+                        const selectedHour = parseInt(this.value.split(':')[0]);
+                        waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
+
+                        for (let i = selectedHour + 1; i <= 21; i++) {
+                            const jamMulai = selectedHour;
+                            const jamSelesai = i;
+                            let konflik = false;
+
+                            for (let jam = jamMulai; jam < jamSelesai; jam++) {
+                                const jamCheck = `${jam.toString().padStart(2, '0')}:00:00`;
+                                if (waktuTerisi.includes(jamCheck)) {
+                                    konflik = true;
+                                    break;
+                                }
+                            }
+
+                            if (!konflik) {
+                                const jam = `${jamSelesai.toString().padStart(2, '0')}:00:00`;
+                                const option = document.createElement('option');
+                                option.value = jam;
+                                option.textContent = jam.substring(0, 5);
+                                waktuSelesai.appendChild(option);
+                            }
+                        }
+                    })
 
                     hitungTotalHarga();
                 })

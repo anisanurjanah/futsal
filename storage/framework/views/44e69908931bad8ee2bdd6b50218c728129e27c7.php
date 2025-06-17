@@ -267,7 +267,7 @@
                         const selectedHour = parseInt(this.value.split(':')[0]);
                         waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
 
-                        for (let i = selectedHour + 1; i <= 20; i++) {
+                        for (let i = selectedHour + 1; i <= 21; i++) {
                             const jamMulai = selectedHour;
                             const jamSelesai = i;
                             let konflik = false;

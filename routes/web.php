@@ -50,7 +50,7 @@ Route::group(['middleware' => 'AdminMiddleware'], function () {
     Route::resource('/dashboard/pembayaran', PembayaranController::class);
     Route::resource('/dashboard/pembayarandetails', PembayaranDetailController::class);
 
+    Route::patch('/dashboard/reservasi/{id}/cancel', [ReservasiController::class, 'cancelReservasi']);
     Route::get('/dashboard/keuangan', [LaporanController::class, 'keuangan']);
     Route::get('/dashboard/keuangan/export-pdf', [LaporanController::class, 'exportPDF']);
-    Route::put('/dashboard/reservasi/{id}', [ReservasiController::class, 'update'])->name('reservasi.update');
 });

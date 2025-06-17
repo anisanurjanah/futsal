@@ -42,7 +42,19 @@
                             <td class="text-center">{{ $item['durasi'] }} jam</td>
                             <td class="text-right">Rp.
                                 {{ number_format($item['durasi'] * $item['harga'], 0, ',', '.') }}</td>
-                            <td>{{ $item['status'] }}</td>
+                            <td>
+                                @if ($item['status'] === 'Ditunda')
+                                    <span class="badge bg-warning text-dark">{{ $item['status'] }}</span>
+                                @elseif ($item['status'] === 'Berlangsung')
+                                    <span class="badge bg-info text-dark">{{ $item['status'] }}</span>
+                                @elseif ($item['status'] === 'Selesai')
+                                    <span class="badge bg-success">{{ $item['status'] }}</span>
+                                @elseif ($item['status'] === 'Dibatalkan')
+                                    <span class="badge bg-danger">{{ $item['status'] }}</span>
+                                @else
+                                    <span class="badge bg-danger">{{ $item['status'] }}</span>
+                                @endif
+                            </td>
                             <td class="text-center">
                                 @if ($item['status_pembayaran'] == 'Belum Lunas')
                                     <span class="badge bg-primary">{{ $item['status_pembayaran'] }}</span>
@@ -54,9 +66,19 @@
                                 <a href="{{ url('/dashboard/reservasi/' . $item['id']) }}" class="btn btn-xs btn-primary"
                                     title="Show"><i class="fas fa-eye"></i>
                                 </a>
+
                                 <a href="{{ url('/dashboard/reservasi/' . $item['id']) . '/edit' }}" class="btn btn-xs btn-warning"
                                     title="Edit"><i class="fas fa-edit"></i>
                                 </a>
+
+                                <form id="cancel-form-{{ $item['id'] }}" action="{{ url('/dashboard/reservasi/' . $item['id'] . '/cancel') }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('PATCH')
+                                </form>
+                                <button onclick="cancel({{ $item['id'] }})" class="btn btn-xs btn-secondary" title="Batalkan reservasi">
+                                    <i class="fas fa-ban"></i>
+                                </button>
+
                                 <form id="delete-form-{{ $item['id'] }}" action="{{ url('/dashboard/reservasi/' . $item['id']) }}" method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
@@ -124,6 +146,20 @@
             });
         }
 
+        function cancel_sukses() {
+            var Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000
+            });
+
+            Toast.fire({
+                icon: 'success',
+                title: ' &nbsp; Reservasi berhasil dibatalkan'
+            });
+        }
+
         function del(id) {
             Swal.fire({
                 title: "Ingin Menghapus Data ini?",
@@ -135,6 +171,21 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     document.getElementById('delete-form-' + id).submit();
+                }
+            });
+        }
+
+        function cancel(id) {
+            Swal.fire({
+                title: "Yakin ingin membatalkan reservasi ini?",
+                icon: 'warning',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Batalkan',
+                cancelButtonText: 'Kembali'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('cancel-form-' + id).submit();
                 }
             });
         }
@@ -155,6 +206,12 @@
     @if (session('delete_sukses'))
         <script>
             delete_sukses();
+        </script>
+    @endif
+
+    @if (session('cancel_sukses'))
+        <script>
+            cancel_sukses();
         </script>
     @endif
 @endsection
