@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <link rel="stylesheet" href="<?php echo e(asset('adminlte')); ?>/plugins/select2/css/select2.min.css">
     <link rel="stylesheet"
         href="<?php echo e(asset('adminlte')); ?>/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
@@ -29,41 +31,21 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="<?php echo e(route('home')); ?>">FitPlaza</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="<?php echo e(route('home')); ?>">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Tentang</a>
-                        </li>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Kontak</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Layanan</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?php echo e(route('reservasi')); ?>">Reservasi Lapangan</a>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
+    
+    <?php if(Request::is('/')): ?>
+        <?php echo $__env->make('layout.header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+    <?php endif; ?>
+
     <div class="container">
         <?php echo $__env->yieldContent('content'); ?>
     </div>
+
+    <div class="container">
+        <footer class="py-3 my-4">
+            <p class="text-center text-body-secondary">&copy; 2025 FitPlaza — Semua Hak Dilindungi</p>
+        </footer>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous">
     </script>

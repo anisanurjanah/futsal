@@ -1,30 +1,32 @@
 
 
 <?php $__env->startSection('title', 'Home'); ?>
+
 <?php $__env->startSection('content'); ?>
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Welcome</h5>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <section class="content">
-        <div class="container-fluid">
+        <div class="container-fluid py-3">
             <div class="row">
-                <div class="col-md">
+                <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <div class="col-8 p-4">
-                                <select id="selectLapangan" class="form-control">
-                                    <option value="">Pilih Lapangan</option>
-                                    <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                        <option value="<?php echo e($lap->id); ?>"><?php echo e($lap->name); ?></option>
-                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                </select>
+                            <div class="col-12 p-4">
+                                <div class="album">
+                                    <div class="container">
+                                        <h5 class="mb-4">Pilih Lapangan</h5>
+
+                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                                        <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <div class="col">
+                                                <label class="d-block bg-body-secondary bg-gradient text-center rounded p-5 lapangan-option">
+                                                    <input type="radio" name="lapangan_id" value="<?php echo e($lap->id); ?>" class="form-check-input d-none">
+                                                    <h5 class="fw-bold m-0"><?php echo e($lap->name); ?></h5>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-12 p-4 mt-3">
                                 <!-- THE CALENDAR -->
@@ -43,24 +45,162 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Reservasi di sini</h5>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <a href="<?php echo e(route('reservasi')); ?>" class="btn btn-primary" onclick="clearReservasiSession()">Reservasi</a>
+            <section id="tentang" class="content">
+                <div class="container-fluid py-3">
+                    <div class="p-4">
+                        <div class="row featurette">
+                            <div class="col-md-7 order-md-2">
+                                <h2 class="featurette-heading fw-normal lh-1 mb-4">Tentang <span class="text-body-secondary">FitPlaza</span></h2>
+                                
+                                <p class="lead text-justify">
+                                    FitPlaza adalah penyedia layanan GOR olahraga modern yang memudahkan siapa pun untuk melakukan reservasi lapangan secara online, cepat, dan transparan. Dari futsal, bulu tangkis, basket, hingga bulu tangkis, kami hadir untuk mendukung gaya hidup aktif dan sehat bagi semua kalangan. Dengan sistem reservasi yang user-friendly dan informasi jadwal yang selalu diperbarui, kami memastikan pengalaman sewa lapangan yang efisien dan tanpa ribet.
+                                </p>
+                            </div>
+                            <div class="col-md-5 order-md-1">
+                                <img src="https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&h=500&w=500"
+                                    alt="Olahraga di FitPlaza"
+                                    class="img-fluid rounded shadow"
+                                    width="500"
+                                    height="500"
+                                    loading="lazy">   
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+        
+            <section id="layanan" class="content">
+                <div class="container-fluid py-3">
+                    <div class="album p-4">
+                        <h2 class="featurette-heading fw-normal lh-1 mb-4 text-center">Layanan Kami</h2>
+                        
+                        <div class="container">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3 mb-3">
+                                 <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-calendar2-check-fill text-primary" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Reservasi lapangan olahraga seperti futsal, basket, dan bulu tangkis</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-people-fill text-success" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Peminjaman lapangan untuk kegiatan pribadi, komunitas, atau event olahraga</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+                                 <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-phone-fill text-info" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Reservasi online dengan sistem yang mudah</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-clock-fill text-warning" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Informasi ketersediaan lapangan secara real-time</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="reservasi" class="content" style="background-color: #0d6efd;">
+                <div class="container-fluid py-3 text-white text-center">
+                    <div class="p-4">
+                        <h2 class="fw-bold mb-3">Siap untuk Bermain?</h2>
+                        <p class="lead mb-4">Reservasi lapangan favoritmu sekarang juga dengan mudah dan cepat di FitPlaza!</p>
+                        <a href="<?php echo e(route('reservasi')); ?>" onclick="clearReservasiSession()" class="btn btn-light">
+                            Mulai Reservasi
+                        </a>
+                    </div>
+                </div>
+            </section>
+        
+            <section id="kontak" class="content">
+                <div class="container-fluid py-3">
+                    <div class="p-4">
+                        <h2 class="featurette-heading fw-normal lh-1 mb-4 text-center">Kontak Kami</h2>
+                        
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <ul class="list-unstyled fs-5">
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-browser-chrome text-primary me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Website</strong><br>
+                                            <span class="text-muted">http://wa.link/c1vivl</span>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-telephone-fill text-success me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Telepon</strong><br>
+                                            <span class="text-muted">0819-1707-3488</span>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-instagram text-danger me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Instagram</strong><br>
+                                            <span class="text-muted">@fitplaza.cilegonpark</span>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-start">
+                                        <i class="bi bi-geo-alt-fill text-danger me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Alamat</strong><br>
+                                            <span class="text-muted">Kalitimbang, Kec. Cibeber, Kota Cilegon, Banten</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="ratio ratio-4x3 rounded shadow-sm">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.574598920231!2d106.0461213!3d-6.0529456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e418f179e8d81e5%3A0x8849aad71b217f89!2sGOR%20Fit%20Plaza!5e0!3m2!1sid!2sid!4v1750130006128!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
-</div>
+
 <?php $__env->stopSection(); ?>
 
 
 <?php $__env->startSection('script'); ?>
     <script>
+
+        document.querySelectorAll('.lapangan-option input[type="radio"]').forEach(input => {
+            input.addEventListener('change', function () {
+                document.querySelectorAll('.lapangan-option').forEach(el => {
+                    el.classList.remove('border', 'border-primary', 'shadow');
+                });
+
+                this.closest('.lapangan-option').classList.add('border', 'border-primary', 'shadow');
+            });
+        });
     
         $(function () {
             /* initialize the external events
@@ -154,10 +294,12 @@
                     }
                 },
                 dateClick: function(info) {
-                    const lapanganId = $('#selectLapangan').val();
+                    const lapanganId = $('input[name="lapangan_id"]:checked').val();
 
                     sessionStorage.setItem('tanggalReservasi', info.dateStr);
                     sessionStorage.setItem('lapanganId', lapanganId);
+
+                    console.log(lapanganId)
                     
                     window.location.href = '/reservasi';
                 }
@@ -166,7 +308,7 @@
             calendar.render();
             // $('#calendar').fullCalendar()
 
-            $('#selectLapangan').on('change', function() {
+            $('input[name="lapangan_id"]').on('change', function () {
                 const lapanganId = $(this).val();
                 if (!lapanganId) {
                     $('#calendar').addClass('d-none');

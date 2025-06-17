@@ -3,114 +3,124 @@
 @section('title', 'Reservasi')
 
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Reservasi Lapangan</h3>
-                    </div>
-                    <div class="card-body">
-                        <form action="{{ route('reservasi/add') }}" method="POST" id="reservasiForm">
-                            @csrf
-                            {{-- <input type="hidden" name="id_user" value="{{ session()->get('id_user') }}"> --}}
-                            <div class="form-group mb-3">
-                                <label class="d-block">Tipe Lapangan</label>
-                                <div class="d-flex gap-3">
-                                    @foreach ($lapangan as $item)
+
+    <section class="content">
+        <div class="container-fluid py-3">
+            <div class="row justify-content-center">
+                <div class="col-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Reservasi Lapangan</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            <form action="{{ route('reservasi/add') }}" method="POST" id="reservasiForm">
+                                @csrf
+
+                                <div class="album">
+                                    <div class="container">
+                                        <h5 class="mb-4">Lapangan</h5>
+
+                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                                        @foreach ($lapangan as $lap)
+                                            <div class="col">
+                                                <label class="d-block bg-body-tertiary bg-gradient text-center rounded py-4 lapangan-option">
+                                                    <input type="radio"
+                                                        id="lapangan{{ $lap->id }}"
+                                                        name="lapangan_id"
+                                                        value="{{ $lap->id }}"
+                                                        class="form-check-input d-none">
+
+                                                    <p class="m-0">{{ $lap->name }}</p>
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="nama">Nama</label>
+                                    <input type="text" class="form-control" id="nama" name="nama" required>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label for="nomor_telepon">Nomor Telepon</label>
+                                    <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="email">Email</label>
+                                    <input type="email" class="form-control" id="email" name="email" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="tanggal">Tanggal</label>
+                                    <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="waktu_mulai">Waktu Mulai</label>
+                                    <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
+                                        <option value="">Pilih Waktu Mulai</option>
+                                        @for ($i = 1; $i <= 24; $i++)
+                                            @if ($i < 10)
+                                                <option value="0{{ $i }}:00:00">0{{ $i }}:00</option>
+                                            @else
+                                                <option value="{{ $i }}:00:00">{{ $i }}:00</option>
+                                            @endif
+                                        @endfor
+                                    </select>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label for="waktu_selesai">Waktu Selesai</label>
+                                    <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
+                                        <option value="">Pilih Waktu Selesai</option>
+                                        @for ($i = 1; $i <= 24; $i++)
+                                            @if ($i < 10)
+                                                <option value="0{{ $i }}:00:00">0{{ $i }}:00</option>
+                                            @else
+                                                <option value="{{ $i }}:00:00">{{ $i }}:00</option>
+                                            @endif
+                                        @endfor
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="d-block">Pembayaran</label>
+                                    <div class="d-flex flex-wrap gap-3">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="lapangan_id"
-                                                id="lapangan{{ $item->id }}" value="{{ $item->id }}"
-                                                data-harga="{{ $item->price }}" required>
-                                            <label class="form-check-label" for="lapangan{{ $item->id }}">
-                                                {{ $item->name }}
+                                            <input class="form-check-input" type="radio" name="tipe_pembayaran"
+                                                id="tipe_dp" value="dp" required>
+                                            <label class="form-check-label" for="tipe_dp">
+                                                Down Payment
                                             </label>
                                         </div>
-                                    @endforeach
-                                </div>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="nama">Nama</label>
-                                <input type="text" class="form-control" id="nama" name="nama" required>
-                            </div>
-                            
-                            <div class="form-group mb-3">
-                                <label for="nomor_telepon">Nomor Telepon</label>
-                                <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" required>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="email">Email</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="tanggal">Tanggal</label>
-                                <input type="date" class="form-control" id="tanggal" name="tanggal" required>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="waktu_mulai">Waktu Mulai</label>
-                                <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
-                                    <option value="">Pilih Waktu Mulai</option>
-                                    @for ($i = 1; $i <= 24; $i++)
-                                        @if ($i < 10)
-                                            <option value="0{{ $i }}:00:00">0{{ $i }}:00</option>
-                                        @else
-                                            <option value="{{ $i }}:00:00">{{ $i }}:00</option>
-                                        @endif
-                                    @endfor
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="waktu_selesai">Waktu Selesai</label>
-                                <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
-                                    <option value="">Pilih Waktu Selesai</option>
-                                    @for ($i = 1; $i <= 24; $i++)
-                                        @if ($i < 10)
-                                            <option value="0{{ $i }}:00:00">0{{ $i }}:00</option>
-                                        @else
-                                            <option value="{{ $i }}:00:00">{{ $i }}:00</option>
-                                        @endif
-                                    @endfor
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label class="d-block">Pembayaran</label>
-                                <div class="d-flex flex-wrap gap-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tipe_pembayaran"
-                                            id="tipe_dp" value="dp" required>
-                                        <label class="form-check-label" for="tipe_dp">
-                                            Down Payment
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="tipe_pembayaran"
-                                            id="tipe_lunas" value="lunas" required>
-                                        <label class="form-check-label" for="tipe_lunas">
-                                            Lunas
-                                        </label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="tipe_pembayaran"
+                                                id="tipe_lunas" value="lunas" required>
+                                            <label class="form-check-label" for="tipe_lunas">
+                                                Lunas
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="total">Total</label>
-                                <input type="text" class="form-control" id="total" name="total" value="Rp 0" readonly disabled>
-                            </div>
-                            <div class="form-group d-none" id="dp_wrapper">
-                                <label for="harga_dp">Harga DP (50%)</label>
-                                <input type="text" class="form-control" id="harga_dp" value="Rp 0" readonly disabled>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Buat Reservasi</button>
-                        </form>
+                                <div class="form-group">
+                                    <label for="total">Total</label>
+                                    <input type="text" class="form-control" id="total" name="total" value="Rp 0" readonly disabled>
+                                </div>
+                                <div class="form-group d-none" id="dp_wrapper">
+                                    <label for="harga_dp">Harga DP (50%)</label>
+                                    <input type="text" class="form-control" id="harga_dp" value="Rp 0" readonly disabled>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Buat Reservasi</button>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
 @endsection
 
 @section('script')
@@ -122,6 +132,42 @@
             const waktuError = document.getElementById('waktuError');
             const tanggalInput = document.getElementById('tanggal');
             const hargaLapangan = @json($lapangan);
+
+            // SESSION
+            const tanggal = sessionStorage.getItem('tanggalReservasi');
+            const lapanganId = sessionStorage.getItem('lapanganId');
+
+            if (tanggal) {
+                tanggalInput.value = tanggal;
+            }
+
+            if (lapanganId) {
+                document.querySelectorAll('input[name="lapangan_id"]').forEach(input => {
+                    if (input.value === lapanganId) {
+                        input.checked = true;
+
+                        document.querySelectorAll('.lapangan-option').forEach(el => {
+                            el.classList.remove('border', 'border-dark', 'shadow');
+                        });
+
+                        input.closest('.lapangan-option')?.classList.add('border', 'border-dark', 'shadow');
+
+                        input.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                });
+            }
+
+            document.querySelectorAll('.lapangan-option input[type="radio"]').forEach(input => {
+                input.addEventListener('change', function () {
+                    sessionStorage.setItem('lapanganId', this.value);
+
+                    document.querySelectorAll('.lapangan-option').forEach(el => {
+                        el.classList.remove('border', 'border-dark', 'shadow');
+                    });
+
+                    this.closest('.lapangan-option').classList.add('border', 'border-dark', 'shadow');
+                });
+            });
 
             // Setelah semua element diambil
             if (tanggalInput.value && document.querySelector('input[name="lapangan_id"]:checked')) {
@@ -297,18 +343,26 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         const tanggal = sessionStorage.getItem('tanggalReservasi');
         const lapanganId = sessionStorage.getItem('lapanganId');
+
+        console.log(lapanganId)
 
         if (tanggal) {
             $('#tanggal').val(tanggal);
         }
 
         if (lapanganId) {
-            $(`#lapangan${lapanganId}`).prop('checked', true);
+            const radio = $(`#lapangan${lapanganId}`);
+            radio.prop('checked', true).trigger('change');
         }
-    </script>
+
+        $('input[name="lapangan_id"]').on('change', function () {
+            const selectedId = $(this).val();
+            sessionStorage.setItem('lapanganId', selectedId);
+        });
+    </script> --}}
     <script>
         @if (session('add_gagal'))
             Swal.fire({
