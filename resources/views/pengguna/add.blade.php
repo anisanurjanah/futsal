@@ -14,8 +14,7 @@
 
 @section('content')
     <div class="row">
-
-        <div class="col-md-12">
+        <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -26,22 +25,20 @@
                         </div>
                         <div class="col mr-auto">
                             <div class="mr-auto float-right">
-                                <a href="{{ url('pengguna/index') }}" class="btn btn-default">
+                                <a href="{{ url('/dashboard/pengguna') }}" class="btn btn-default">
                                     << Go Back to List </a>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-
-                    <form action="{{ url('pengguna/add') }}" method="post">
+                    <form action="{{ url('/dashboard/pengguna') }}" method="post">
                         @csrf
                         <div class="row">
-                            <div class="col-md-4"></div>
-                            <div class="col-md-4">
+                            <div class="col-md-12">
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
-                                    <input type="text" class="form-control" name="nama_lengkap" id="nama_lengkap"
+                                    <input type="text" class="form-control" name="name" id="name"
                                         required>
                                 </div>
                                 <div class="form-group">
@@ -54,17 +51,10 @@
                                         required>
                                 </div>
                                 <div class="form-group">
-                                    <label>Jenis Kelamin</label>
-                                    <select name="id_gender" id="id_gender" class="form-control" required>
-                                        <option value="1">Pria</option>
-                                        <option value="2">Wanita</option>
-                                    </select>
-                                </div>                                
-                                <div class="form-group">
                                     <label>User Grup</label>
-                                    <select name="id_role" id="id_role" class="form-control" required>
-                                        @foreach ($role as $dt)
-                                            <option value="{{ $dt->id }}">{{ $dt->nama_role }}</option>
+                                    <select name="role" id="role" class="form-control" required>
+                                        @foreach ($role as $key => $value)
+                                            <option value="{{ $key }}">{{ $value }}</option>
                                         @endforeach
                                     </select>
                                 </div>

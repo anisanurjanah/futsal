@@ -17,17 +17,17 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/notifikasi', function () {
-    $notifikasi = DB::table('tbl_notifikasi')->where('is_read', '=', 0)->get();
-    foreach ($notifikasi as $notif) {
-        DB::table('tbl_notifikasi')->where('id', $notif->id)->update(['is_read' => 1]);
-    }
-    if ($notifikasi->isEmpty()) {
-        return response()->json([
-            "status" => "Tidak ada notifikasi",
-            "is_read" => true,
-        ]);
-    } else {
-        return response()->json($notifikasi);
-    }
-})->name('notifikasi');
+// Route::get('/notifikasi', function () {
+//     $notifikasi = DB::table('tbl_notifikasi')->where('is_read', '=', 0)->get();
+//     foreach ($notifikasi as $notif) {
+//         DB::table('tbl_notifikasi')->where('id', $notif->id)->update(['is_read' => 1]);
+//     }
+//     if ($notifikasi->isEmpty()) {
+//         return response()->json([
+//             "status" => "Tidak ada notifikasi",
+//             "is_read" => true,
+//         ]);
+//     } else {
+//         return response()->json($notifikasi);
+//     }
+// })->name('notifikasi');

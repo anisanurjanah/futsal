@@ -5,13 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title') - FUTSAL</title>
+    <title>FitPlaza | @yield('title')</title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <link rel="stylesheet" href="{{ asset('adminlte') }}/plugins/fontawesome-free/css/all.min.css">
-
 
     <!-- DataTables -->
     <!-- Select2 -->
@@ -64,7 +63,7 @@
                         aria-expanded="true" class="nav-link dropdown-toggle">
                         <i class="fas fa-user-circle mr-2 text-lg"></i>
                         <span
-                            class="hidden-xs">{{ ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap) }}</span>
+                            class="hidden-xs">{{ auth()->user()->name }}</span>
                     </a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
                         style="left: 0px; right: inherit;">
@@ -90,7 +89,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
             <a href="#" class="brand-link text-center">
-                <span class="brand-text text-white">FUTSAL</span>
+                <span class="brand-text text-white">FIT PLAZA</span>
             </a>
 
             <div class="sidebar">
@@ -101,10 +100,10 @@
                     </div>
                     <div class="info">
                         <a href="#"
-                            class="d-block">{{ ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap) }}
+                            class="d-block">{{ auth()->user()->name }}
                             <br>
                             <span
-                                class="small">{{ DB::table('tbl_user')->find(session()->get('id_user'))->email }}</span>
+                                class="small">{{ auth()->user()->email }}</span>
                         </a>
                     </div>
                 </div>
@@ -114,45 +113,29 @@
                         data-accordion="false">
                         <li class="nav-header">Home</li>
                         <li class="nav-item">
-                            <a href="{{ url('dashboard') }}"
-                                class="nav-link {{ request()->is('dashboard') ? 'active' : '' }}">
+                            <a href="{{ url('/dashboard') }}"
+                                class="nav-link {{ request()->is('/dashboard') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">Kasir</li>
+                        <li class="nav-header">Reservasi</li>
                         <li class="nav-item">
-                            <a href="{{ url('booking/index') }}"
-                                class="nav-link {{ request()->is('booking/index') ? 'active' : '' }}">
+                            <a href="{{ url('/dashboard/reservasi') }}"
+                                class="nav-link {{ request()->is('/dashboard/reservasi') ? 'active' : '' }}">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Booking
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('pembayaran/index') }}"
-                                class="nav-link {{ request()->is('pembayaran/index') ? 'active' : '' }}">
-                                <i class="nav-icon fas fa-book"></i>
-                                <p>
-                                    Pembayaran
-                                </p>
-                            </a>
-                        </li>
-                        @if (session()->get('id_role') == '1')
-                            <li class="nav-header">Admin</li>
-                                <li class="nav-item">
-                                    <a href="{{ url('pengguna/index') }}"
-                                        class="nav-link {{ request()->is('pengguna/index') ? 'active' : '' }}">
-                                        <i class="nav-icon fas fa-user-plus"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                <a href="{{ url('lapangan/index') }}"
-                                    class="nav-link {{ request()->is('produk/index') ? 'active' : '' }}">
+                        @if (auth()->user()->isKasir())
+                        <li class="nav-header">Kasir</li>
+                            <li class="nav-item">
+                                <a href="{{ url('/dashboard/lapangan') }}"
+                                    class="nav-link {{ request()->is('/dashboard/lapangan') ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Lapangan
@@ -160,15 +143,34 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="{{ url('member/index') }}"
-                                    class="nav-link {{ request()->is('member/index') ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-book"></i>
+                                <a href="{{ url('/dashboard/pengguna') }}"
+                                    class="nav-link {{ request()->is('/dashboard/pengguna') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-plus"></i>
                                     <p>
-                                        Member
+                                        User
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/dashboard/pelanggan') }}"
+                                    class="nav-link {{ request()->is('/dashboard/pelanggan') ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <p>
+                                        Pelanggan
                                     </p>
                                 </a>
                             </li>
                         @endif
+                        <li class="nav-header">Laporan</li>
+                        <li class="nav-item">
+                            <a href="{{ url('/dashboard/keuangan') }}"
+                                class="nav-link {{ request()->is('/dashboard/keuangan') ? 'active' : '' }}">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>
+                                    Keuangan
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{ url('logout') }}" class="nav-link text-danger">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -179,9 +181,7 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
-
         </aside>
 
         <div class="content-wrapper">
@@ -196,7 +196,6 @@
             </section>
         </div>
 
-
         <footer class="main-footer">
 
             <div class="float-right d-none d-sm-inline">
@@ -206,8 +205,6 @@
             reserved.
         </footer>
     </div>
-
-
 
     {{-- <script src="{{ asset('adminlte') }}/plugins/jquery/jquery.min.js"></script>
 
@@ -245,9 +242,6 @@
     <script src="{{ asset('adminlte') }}/plugins/moment/moment.min.js"></script>
     <script src="{{ asset('adminlte') }}/plugins/fullcalendar/main.js"></script>
 
-
-
-
     <script>
         $(function() {
             $('#table1').DataTable({
@@ -266,7 +260,7 @@
             })
         });
     </script>
-    <script>
+    {{-- <script>
         const notifikasiInner = document.getElementById('notifikasiInner');
         let datas = [];
 
@@ -303,9 +297,7 @@
                 }
             });
         }, 1000);
-    </script>
-
-
+    </script> --}}
 
     @yield('script')
 

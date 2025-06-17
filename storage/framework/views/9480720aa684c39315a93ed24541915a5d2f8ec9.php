@@ -40,11 +40,11 @@
             </div>
             <div class="card-body">
                 <p class="login-box-msg">Masukkan username dan Password</p>
-                <form action="<?php echo e(url('login')); ?>" method="post">
+                <form action="<?php echo e(route('login')); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="input-group mb-3">
                         <input name="email" type="email" class="form-control" placeholder="Email" autocomplete="off"
-                            value="admin@localhost.com" required>
+                            required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -52,8 +52,7 @@
                         </div>
                     </div>
                     <div class="input-group mb-3">
-                        <input name="password" type="password" class="form-control" placeholder="Password"
-                            value="123456">
+                        <input name="password" type="password" class="form-control" placeholder="Password" required>
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-lock"></span>

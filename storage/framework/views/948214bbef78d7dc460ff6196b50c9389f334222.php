@@ -1,75 +1,26 @@
-<?php $__env->startSection('title', 'Home'); ?>
+<?php $__env->startSection('title', 'Dashboard'); ?>
 
 <?php $__env->startSection('breadcrums'); ?>
     <div class="row mb-2">
         <div class="col-sm-12">
-            <h1>Hai, <?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?></h1>
+            <h1>Hai, <?php echo e(auth()->user()->name); ?></h1>
         </div>
     </div>
 <?php $__env->stopSection(); ?>
 
 <?php $__env->startSection('content'); ?>
 
-    
-
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="sticky-top mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Draggable Events</h4>
-                            </div>
-                            <div class="card-body">
-                                <!-- the events -->
-                                <div id="external-events">
-                                    <div class="external-event bg-success">Lapangan A1</div>
-                                    <div class="checkbox">
-                                        <label for="drop-remove">
-                                            <input type="checkbox" id="drop-remove">
-                                            remove after drop
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Create Event</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                                    <ul class="fc-color-picker" id="color-chooser">
-                                        <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
-                                    </ul>
-                                </div>
-                                <!-- /btn-group -->
-                                <div class="input-group">
-                                    <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-
-                                    <div class="input-group-append">
-                                        <button id="add-new-event" type="button" class="btn btn-primary">Add</button>
-                                    </div>
-                                    <!-- /btn-group -->
-                                </div>
-                                <!-- /input-group -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- /.col -->
                 <div class="col-md">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <!-- THE CALENDAR -->
-                            <div id="calendar"></div>
+                            <div class="col-12 p-4">
+                                <!-- THE CALENDAR -->
+                                <div id="calendar"></div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -132,20 +83,6 @@
             // initialize the external events
             // -----------------------------------------------------------------
 
-            new Draggable(containerEl, {
-                itemSelector: '.external-event',
-                eventData: function(eventEl) {
-                    return {
-                        title: eventEl.innerText,
-                        backgroundColor: window.getComputedStyle(eventEl, null).getPropertyValue(
-                            'background-color'),
-                        borderColor: window.getComputedStyle(eventEl, null).getPropertyValue(
-                            'background-color'),
-                        textColor: window.getComputedStyle(eventEl, null).getPropertyValue('color'),
-                    };
-                }
-            });
-
             var calendar = new Calendar(calendarEl, {
                 headerToolbar: {
                     left: 'prev,next today',
@@ -157,14 +94,14 @@
                 events: [
                     <?php $__currentLoopData = $booking; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         {
-                            title: '<?php echo e($item->namalapangan); ?>',
+                            title: '<?php echo e($item->lapangan->name); ?>',
                             start: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_mulai); ?>'),
                             end: new Date('<?php echo e($item->tanggal); ?>T<?php echo e($item->waktu_selesai); ?>'),
                         },
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 ],
-                editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
+                editable: false,
+                droppable: false, // this allows things to be dropped onto the calendar !!!
                 drop: function(info) {
                     // is the "remove after drop" checkbox checked?
                     if (checkbox.checked) {

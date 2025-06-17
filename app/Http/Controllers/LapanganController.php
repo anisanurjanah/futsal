@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
+use App\Models\Lapangan;
 use Illuminate\Http\Request;
 
 class LapanganController extends Controller
 {
     public function index()
     {
-        $data = DB::table('tbl_lapangan')->get();
+        $data = Lapangan::all();
 
         return view('lapangan.index', ['data' => $data]);
     }
@@ -19,44 +19,55 @@ class LapanganController extends Controller
         return view('lapangan.add');
     }
 
-    public function add(Request $request)
+    public function store(Request $request)
     {
         date_default_timezone_set('Asia/Jakarta');
 
-        DB::table('tbl_lapangan')->insert([
-            'namalapangan' => $request->namalapangan,
-            'hargaperjam' => $request->hargaperjam,
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'price' => 'required|numeric|min:0',
         ]);
 
-        return redirect('lapangan/index')->with('add_sukses', 1);
+        Lapangan::create($validated);
+
+        return redirect('/dashboard/lapangan')->with('add_sukses', 1);
+    }
+
+    public function show()
+    {
+
     }
 
     public function edit($id)
     {
-        $row = DB::table('tbl_lapangan')->where('tbl_lapangan.id', $id)->first();
+        $row = Lapangan::findOrFail($id);
 
         return view('lapangan.edit', [
             'row' => $row,
         ]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
         date_default_timezone_set('Asia/Jakarta');
 
-        DB::table('tbl_lapangan')
-            ->where('id', $request->id)
-            ->update([
-                'namalapangan' => $request->namalapangan,
-                'hargaperjam' => $request->hargaperjam,
-            ]);
+        $row = Lapangan::findOrFail($id);
 
-        return redirect('lapangan/index')->with('edit_sukses', 1);
+        $validated = $request->validate([
+            'name' => 'required|string|max:64',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $row->update($validated);
+
+        return redirect('/dashboard/lapangan')->with('edit_sukses', 1);
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        DB::table('tbl_lapangan')->where('id', $id)->delete();
+        $lapangan = Lapangan::findOrFail($id);
+        $lapangan->delete();
+
         return redirect()->back()->with('delete_sukses', 1);
     }
 }

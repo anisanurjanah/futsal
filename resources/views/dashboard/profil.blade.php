@@ -14,22 +14,6 @@
 @endsection
 
 @section('content')
-    @php
-
-        $data = DB::table('tbl_user')
-            ->join('tbl_role', 'tbl_role.id', '=', 'tbl_user.id_role')
-            ->select('tbl_user.*', 'tbl_role.nama_role')
-            ->where('tbl_user.id', session()->get('id_user'))
-            ->get();
-    @endphp
-
-    @foreach ($data as $item)
-        @php
-            $nama_lengkap = $item->nama_lengkap;
-            $email = $item->email;
-            $nama_role = $item->nama_role;
-        @endphp
-    @endforeach
 
     <div class="row">
         <div class="col-md-3">
@@ -40,8 +24,8 @@
                         <img class="rounded mx-auto d-block" src="{{ url('img/profil/kosong.jpg') }}" width="200"
                             height="200">
                     </div>
-                    <h3 class="profile-username text-center">{{ $nama_lengkap }}</h3>
-                    <p class="text-muted text-center">{{ $email }}</p>
+                    <h3 class="profile-username text-center">{{ auth()->user()->name }}</h3>
+                    <p class="text-muted text-center">{{ auth()->user()->email }}</p>
                     <br><br>
                 </div>
 
@@ -53,19 +37,19 @@
             <div class="card card-primary card-outline">
                 <div class="card-body">
                     <strong><i class="fas fa-user mr-1"></i> Nama Lengkap</strong>
-                    <p class="text-muted ">{{ $nama_lengkap }}</p>
+                    <p class="text-muted ">{{ auth()->user()->name }}</p>
                     <hr>
                     <strong><i class="fas fa-envelope mr-1"></i> Email</strong>
-                    <p class="text-muted ">{{ $email }}</p>
+                    <p class="text-muted ">{{ auth()->user()->email }}</p>
                     <hr>
                     <strong><i class="fas fa-group mr-1"></i> Level User</strong>
-                    <p class="text-muted ">{{ $nama_role }}</p>
+                    <p class="text-muted ">{{ auth()->user()->role }}</p>
                     <hr>
                     <strong><i class="fas fa-book mr-1"></i> Jenis Kelamin</strong>
                     <p class="text-muted ">
-                        @if ($item->id_gender == '1')
+                        @if (auth()->user()->role != 'Kasir')
                             Laki - laki
-                        @elseif ($item->id_gender == '2')
+                        @else
                             Perempuan
                         @endif
                         </h5>

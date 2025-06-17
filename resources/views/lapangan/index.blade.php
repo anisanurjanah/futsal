@@ -15,7 +15,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ url('lapangan/add') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="{{ url('/dashboard/lapangan/create') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
         </div>
         <div class="card-body">
             <table id="tabellapangan" class="table table-bordered table-hover">
@@ -31,13 +31,18 @@
                     @foreach ($data as $item)
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
-                            <td>{{ $item->namalapangan }}</td>  
-                            <td class="text-right">Rp. {{ number_format($item->hargaperjam,0,',','.') }}</td>                             
+                            <td>{{ $item->name }}</td>  
+                            <td class="text-right">Rp. {{ number_format($item->price,0,',','.') }}</td>                             
                             <td class="text-center">
-                                <a href="{{ url('lapangan/edit/' . $item->id) }}" class="btn btn-xs btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i> </a>
-                                <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i
-                                        class="fas fa-trash"></i> </button>
+                                <a href="{{ url('/dashboard/lapangan/' . $item->id . '/edit') }}" class="btn btn-xs btn-warning"
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <form id="delete-form-{{ $item->id }}" action="{{ url('/dashboard/lapangan/' . $item->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                                <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -110,7 +115,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('lapangan/lapangan/delete') }}/" + id;
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }

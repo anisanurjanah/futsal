@@ -1,89 +1,37 @@
 @extends('layout.home')
 
 @section('title', 'Home')
+
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Welcome</h5>
-                </div>
-                {{-- 
-                <div class="card-body">
-                    <div class="text-center">
-                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                            src="https://startbootstrap.github.io/startbootstrap-sb-admin-2/img/undraw_posting_photo.svg"
-                            alt="...">
-                    </div>
-                </div> --}}
-
-            </div>
-
-        </div>
-    </div>
 
     <section class="content">
-        <div class="container-fluid">
+        <div class="container-fluid py-3">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="sticky-top mb-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4 class="card-title">Draggable Events</h4>
-                            </div>
-                            <div class="card-body">
-                                <!-- the events -->
-                                <div id="external-events">
-                                    <div class="external-event bg-success">Lunch</div>
-                                    <div class="external-event bg-warning">Go home</div>
-                                    <div class="external-event bg-info">Do homework</div>
-                                    <div class="external-event bg-primary">Work on UI design</div>
-                                    <div class="external-event bg-danger">Sleep tight</div>
-                                    <div class="checkbox">
-                                        <label for="drop-remove">
-                                            <input type="checkbox" id="drop-remove">
-                                            remove after drop
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- /.card-body -->
-                        </div>
-                        <!-- /.card -->
-                        <div class="card">
-                            <div class="card-header">
-                                <h3 class="card-title">Create Event</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="btn-group" style="width: 100%; margin-bottom: 10px;">
-                                    <ul class="fc-color-picker" id="color-chooser">
-                                        <li><a class="text-primary" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-warning" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-success" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-danger" href="#"><i class="fas fa-square"></i></a></li>
-                                        <li><a class="text-muted" href="#"><i class="fas fa-square"></i></a></li>
-                                    </ul>
-                                </div>
-                                <!-- /btn-group -->
-                                <div class="input-group">
-                                    <input id="new-event" type="text" class="form-control" placeholder="Event Title">
-
-                                    <div class="input-group-append">
-                                        <button id="add-new-event" type="button" class="btn btn-primary">Add</button>
-                                    </div>
-                                    <!-- /btn-group -->
-                                </div>
-                                <!-- /input-group -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- /.col -->
-                <div class="col-md">
+                <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-body p-0">
-                            <!-- THE CALENDAR -->
-                            <div id="calendar"></div>
+                            <div class="col-12 p-4">
+                                <div class="album">
+                                    <div class="container">
+                                        <h5 class="mb-4">Pilih Lapangan</h5>
+
+                                        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                                            @foreach ($lapangan as $lap)
+                                                <div class="col">
+                                                    <label class="d-block bg-body-secondary bg-gradient text-center rounded p-5 lapangan-option" style="cursor: pointer;">
+                                                        <input type="radio" name="lapangan_id" value="{{ $lap->id }}" class="form-check-input d-none">
+                                                        <h5 class="fw-bold m-0">{{ $lap->name }}</h5>
+                                                    </label>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 p-4 mt-3">
+                                <!-- THE CALENDAR -->
+                                <div id="calendar" class="d-none"></div>
+                            </div>
                         </div>
                         <!-- /.card-body -->
                     </div>
@@ -97,30 +45,166 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Reservasi di sini</h5>
-                </div>
-                <div class="card-body">
-                    <div class="text-center">
-                        <a href="{{ route('reservasi') }}" class="btn btn-primary">Reservasi</a>
+            <section id="tentang" class="content">
+                <div class="container-fluid py-3">
+                    <div class="p-4">
+                        <div class="row featurette">
+                            <div class="col-md-7 order-md-2">
+                                <h2 class="featurette-heading fw-normal lh-1 mb-4">Tentang <span class="text-body-secondary">FitPlaza</span></h2>
+                                
+                                <p class="lead text-justify">
+                                    FitPlaza adalah penyedia layanan GOR olahraga modern yang memudahkan siapa pun untuk melakukan reservasi lapangan secara online, cepat, dan transparan. Dari futsal, bulu tangkis, basket, hingga bulu tangkis, kami hadir untuk mendukung gaya hidup aktif dan sehat bagi semua kalangan. Dengan sistem reservasi yang user-friendly dan informasi jadwal yang selalu diperbarui, kami memastikan pengalaman sewa lapangan yang efisien dan tanpa ribet.
+                                </p>
+                            </div>
+                            <div class="col-md-5 order-md-1">
+                                <img src="https://images.pexels.com/photos/114296/pexels-photo-114296.jpeg?auto=compress&cs=tinysrgb&h=500&w=500"
+                                    alt="Olahraga di FitPlaza"
+                                    class="img-fluid rounded shadow"
+                                    width="500"
+                                    height="500"
+                                    loading="lazy">   
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+        
+            <section id="layanan" class="content">
+                <div class="container-fluid py-3">
+                    <div class="album p-4">
+                        <h2 class="featurette-heading fw-normal lh-1 mb-4 text-center">Layanan Kami</h2>
+                        
+                        <div class="container">
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3 mb-3">
+                                 <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-calendar2-check-fill text-primary" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Reservasi lapangan olahraga seperti futsal, basket, dan bulu tangkis</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-people-fill text-success" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Peminjaman lapangan untuk kegiatan pribadi, komunitas, atau event olahraga</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-3">
+                                 <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-phone-fill text-info" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Reservasi online dengan sistem yang mudah</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card shadow-sm text-center p-4">
+                                        <div class="d-flex justify-content-center mb-3">
+                                            <i class="bi bi-clock-fill text-warning" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text mx-4">Informasi ketersediaan lapangan secara real-time</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
+            <section id="reservasi" class="content" style="background-color: #0d6efd;">
+                <div class="container-fluid py-3 text-white text-center">
+                    <div class="p-4">
+                        <h2 class="fw-bold mb-3">Siap untuk Bermain?</h2>
+                        <p class="lead mb-4">Reservasi lapangan favoritmu sekarang juga dengan mudah dan cepat di FitPlaza!</p>
+                        <a href="{{ route('reservasi') }}" onclick="clearReservasiSession()" class="btn btn-light">
+                            Mulai Reservasi
+                        </a>
+                    </div>
+                </div>
+            </section>
+        
+            <section id="kontak" class="content">
+                <div class="container-fluid py-3">
+                    <div class="p-4">
+                        <h2 class="featurette-heading fw-normal lh-1 mb-4 text-center">Kontak Kami</h2>
+                        
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <ul class="list-unstyled fs-5">
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-browser-chrome text-primary me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Website</strong><br>
+                                            <span class="text-muted">http://wa.link/c1vivl</span>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-telephone-fill text-success me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Telepon</strong><br>
+                                            <span class="text-muted">0819-1707-3488</span>
+                                        </div>
+                                    </li>
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-instagram text-danger me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Instagram</strong><br>
+                                            <span class="text-muted">@fitplaza.cilegonpark</span>
+                                        </div>
+                                    </li>
+                                    <li class="d-flex align-items-start">
+                                        <i class="bi bi-geo-alt-fill text-danger me-3 fs-4"></i>
+                                        <div>
+                                            <strong>Alamat</strong><br>
+                                            <span class="text-muted">Kalitimbang, Kec. Cibeber, Kota Cilegon, Banten</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="ratio ratio-4x3 rounded shadow-sm">
+                                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3967.574598920231!2d106.0461213!3d-6.0529456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e418f179e8d81e5%3A0x8849aad71b217f89!2sGOR%20Fit%20Plaza!5e0!3m2!1sid!2sid!4v1750130006128!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
+    </div>
 
-    </div>
-    </div>
 @endsection
 
 
 @section('script')
     <script>
-        $(function() {
 
+        document.querySelectorAll('.lapangan-option input[type="radio"]').forEach(input => {
+            input.addEventListener('change', function () {
+                document.querySelectorAll('.lapangan-option').forEach(el => {
+                    el.classList.remove('border', 'border-primary', 'shadow');
+                });
+
+                this.closest('.lapangan-option').classList.add('border', 'border-primary', 'shadow');
+            });
+        });
+    
+        $(function () {
             /* initialize the external events
-             -----------------------------------------------------------------*/
+                -----------------------------------------------------------------*/
             function ini_events(ele) {
                 ele.each(function() {
 
@@ -144,9 +228,9 @@
             }
 
             ini_events($('#external-events div.external-event'))
-
+            
             /* initialize the calendar
-             -----------------------------------------------------------------*/
+            -----------------------------------------------------------------*/
             //Date for the calendar events (dummy data)
             var date = new Date()
             var d = date.getDate(),
@@ -159,7 +243,7 @@
             // var containerEl = document.getElementById('external-events');
             var checkbox = document.getElementById('drop-remove');
             var calendarEl = document.getElementById('calendar');
-
+            
             // initialize the external events
             // -----------------------------------------------------------------
 
@@ -177,7 +261,21 @@
             //     }
             // });
 
-            var calendar = new Calendar(calendarEl, {
+            const allEvents = [
+                @foreach ($data as $item)
+                    {
+                        lapangan_id: '{{ $item->lapangan_id }}',
+                        title: '{{ $item->lapangan->name }}',
+                        start: '{{ \Carbon\Carbon::parse($item->tanggal . " " . $item->waktu_mulai)->format("Y-m-d\TH:i:s") }}',
+                        end: '{{ \Carbon\Carbon::parse($item->tanggal . " " . $item->waktu_selesai)->format("Y-m-d\TH:i:s") }}',
+                        backgroundColor: '#3c8dbc', //Primary (light-blue)
+                        borderColor: '#3c8dbc'
+                    }@if (!$loop->last),@endif
+                @endforeach
+            ];
+
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'id',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
@@ -185,31 +283,49 @@
                 },
                 themeSystem: 'bootstrap',
                 //Random default events
-                events: [
-                    @foreach ($data as $item)
-                        {
-                            title: '{{ $item->namalapangan }}',
-                            start: new Date('{{ $item->tanggal }}T{{ $item->waktu_mulai }}'),
-                            end: new Date('{{ $item->tanggal }}T{{ $item->waktu_selesai }}'),
-                            backgroundColor: '#3c8dbc', //Primary (light-blue)
-                            borderColor: '#3c8dbc'
-                        },
-                    @endforeach
-                ],
-                editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
+                events: [],
+                editable: false,
+                droppable: false, // this allows things to be dropped onto the calendar !!!
                 drop: function(info) {
                     // is the "remove after drop" checkbox checked?
-                    if (checkbox.checked) {
+                    if (checkbox && checkbox.checked) {
                         // if so, remove the element from the "Draggable Events" list
                         info.draggedEl.parentNode.removeChild(info.draggedEl);
                     }
+                },
+                dateClick: function(info) {
+                    const lapanganId = $('input[name="lapangan_id"]:checked').val();
+
+                    sessionStorage.setItem('tanggalReservasi', info.dateStr);
+                    sessionStorage.setItem('lapanganId', lapanganId);
+                    
+                    window.location.href = '/reservasi';
+                },
+                dayCellDidMount: function(info) {
+                    info.el.style.cursor = 'pointer';
                 }
             });
 
             calendar.render();
             // $('#calendar').fullCalendar()
 
+            $('input[name="lapangan_id"]').on('change', function () {
+                const lapanganId = $(this).val();
+                if (!lapanganId) {
+                    $('#calendar').addClass('d-none');
+                    return;
+                }
+
+                $('#calendar').removeClass('d-none').fadeIn(300, function() {
+                    calendar.render();
+                });
+
+                calendar.removeAllEvents();
+
+                const filteredEvents = allEvents.filter(e => e.lapangan_id === lapanganId);
+                filteredEvents.forEach(e => calendar.addEvent(e));
+            })
+                
             /* ADDING EVENTS */
             var currColor = '#3c8dbc' //Red by default
             // Color chooser button
@@ -248,6 +364,12 @@
                 $('#new-event').val('')
             })
         })
+    </script>
+    <script>
+        function clearReservasiSession() {
+            sessionStorage.removeItem('tanggalReservasi');
+            sessionStorage.removeItem('lapanganId');
+        }
     </script>
     <script>
         @if (session('add_gagal'))

@@ -5,13 +5,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo $__env->yieldContent('title'); ?> - FUTSAL</title>
+    <title>FitPlaza | <?php echo $__env->yieldContent('title'); ?></title>
 
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <link rel="stylesheet" href="<?php echo e(asset('adminlte')); ?>/plugins/fontawesome-free/css/all.min.css">
-
 
     <!-- DataTables -->
     <!-- Select2 -->
@@ -64,7 +63,7 @@
                         aria-expanded="true" class="nav-link dropdown-toggle">
                         <i class="fas fa-user-circle mr-2 text-lg"></i>
                         <span
-                            class="hidden-xs"><?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?></span>
+                            class="hidden-xs"><?php echo e(auth()->user()->name); ?></span>
                     </a>
                     <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow"
                         style="left: 0px; right: inherit;">
@@ -90,7 +89,7 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
             <a href="#" class="brand-link text-center">
-                <span class="brand-text text-white">FUTSAL</span>
+                <span class="brand-text text-white">FIT PLAZA</span>
             </a>
 
             <div class="sidebar">
@@ -101,11 +100,11 @@
                     </div>
                     <div class="info">
                         <a href="#"
-                            class="d-block"><?php echo e(ucfirst(DB::table('tbl_user')->find(session()->get('id_user'))->nama_lengkap)); ?>
+                            class="d-block"><?php echo e(auth()->user()->name); ?>
 
                             <br>
                             <span
-                                class="small"><?php echo e(DB::table('tbl_user')->find(session()->get('id_user'))->email); ?></span>
+                                class="small"><?php echo e(auth()->user()->email); ?></span>
                         </a>
                     </div>
                 </div>
@@ -115,36 +114,29 @@
                         data-accordion="false">
                         <li class="nav-header">Home</li>
                         <li class="nav-item">
-                            <a href="<?php echo e(url('dashboard')); ?>"
-                                class="nav-link <?php echo e(request()->is('dashboard') ? 'active' : ''); ?>">
+                            <a href="<?php echo e(url('/dashboard')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard') ? 'active' : ''); ?>">
                                 <i class="nav-icon fas fa-home"></i>
                                 <p>
                                     Dashboard
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-header">Kasir</li>
+                        <li class="nav-header">Reservasi</li>
                         <li class="nav-item">
-                            <a href="<?php echo e(url('booking/index')); ?>"
-                                class="nav-link <?php echo e(request()->is('booking/index') ? 'active' : ''); ?>">
+                            <a href="<?php echo e(url('/dashboard/reservasi')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard/reservasi') ? 'active' : ''); ?>">
                                 <i class="nav-icon fas fa-book"></i>
                                 <p>
                                     Booking
                                 </p>
                             </a>
                         </li>
-                        <?php if(session()->get('id_role') == '1'): ?>
-                            <li class="nav-header">Admin</li>
-                                <li class="nav-item">
-                                    <a href="<?php echo e(url('pengguna/index')); ?>"
-                                        class="nav-link <?php echo e(request()->is('pengguna/index') ? 'active' : ''); ?>">
-                                        <i class="nav-icon fas fa-user-plus"></i>
-                                        <p>User</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                <a href="<?php echo e(url('lapangan/index')); ?>"
-                                    class="nav-link <?php echo e(request()->is('produk/index') ? 'active' : ''); ?>">
+                        <?php if(auth()->user()->isKasir()): ?>
+                        <li class="nav-header">Kasir</li>
+                            <li class="nav-item">
+                                <a href="<?php echo e(url('/dashboard/lapangan')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/lapangan') ? 'active' : ''); ?>">
                                     <i class="nav-icon fas fa-book"></i>
                                     <p>
                                         Lapangan
@@ -152,15 +144,34 @@
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a href="<?php echo e(url('member/index')); ?>"
-                                    class="nav-link <?php echo e(request()->is('member/index') ? 'active' : ''); ?>">
-                                    <i class="nav-icon fas fa-book"></i>
+                                <a href="<?php echo e(url('/dashboard/pengguna')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/pengguna') ? 'active' : ''); ?>">
+                                    <i class="nav-icon fas fa-user-plus"></i>
                                     <p>
-                                        Member
+                                        User
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="<?php echo e(url('/dashboard/pelanggan')); ?>"
+                                    class="nav-link <?php echo e(request()->is('/dashboard/pelanggan') ? 'active' : ''); ?>">
+                                    <i class="nav-icon fas fa-user-plus"></i>
+                                    <p>
+                                        Pelanggan
                                     </p>
                                 </a>
                             </li>
                         <?php endif; ?>
+                        <li class="nav-header">Laporan</li>
+                        <li class="nav-item">
+                            <a href="<?php echo e(url('/dashboard/keuangan')); ?>"
+                                class="nav-link <?php echo e(request()->is('/dashboard/keuangan') ? 'active' : ''); ?>">
+                                <i class="nav-icon fas fa-book"></i>
+                                <p>
+                                    Keuangan
+                                </p>
+                            </a>
+                        </li>
                         <li class="nav-item">
                             <a href="<?php echo e(url('logout')); ?>" class="nav-link text-danger">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
@@ -171,9 +182,7 @@
                         </li>
                     </ul>
                 </nav>
-
             </div>
-
         </aside>
 
         <div class="content-wrapper">
@@ -188,7 +197,6 @@
             </section>
         </div>
 
-
         <footer class="main-footer">
 
             <div class="float-right d-none d-sm-inline">
@@ -198,8 +206,6 @@
             reserved.
         </footer>
     </div>
-
-
 
     
 
@@ -233,9 +239,6 @@
     <script src="<?php echo e(asset('adminlte')); ?>/plugins/moment/moment.min.js"></script>
     <script src="<?php echo e(asset('adminlte')); ?>/plugins/fullcalendar/main.js"></script>
 
-
-
-
     <script>
         $(function() {
             $('#table1').DataTable({
@@ -254,46 +257,7 @@
             })
         });
     </script>
-    <script>
-        const notifikasiInner = document.getElementById('notifikasiInner');
-        let datas = [];
-
-        setInterval(() => {
-            $.ajax({
-                url: '<?php echo e(route('notifikasi')); ?>',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    console.log(data);
-
-                    if (Array.isArray(data)) {
-                        data.forEach(item => {
-                            if (!item.is_read && !datas.find(d => d.id === item.id)) {
-                                datas.push(item);
-                            }
-                        });
-                    } else {
-                        if (!data.is_read && !datas.find(d => d.id === data.id)) {
-                            datas.push(data);
-                        }
-                    }
-
-                    notifikasiInner.innerHTML = datas.map(item => `
-                        <li>
-                            <a href="/booking/index" class="dropdown-item">
-                                ${item.pesan}
-                            </a>
-                        </li>
-                    `).join('');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Gagal fetch:', error);
-                }
-            });
-        }, 1000);
-    </script>
-
-
+    
 
     <?php echo $__env->yieldContent('script'); ?>
 

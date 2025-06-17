@@ -15,7 +15,7 @@
 @section('content')
     <div class="card">
         <div class="card-header">
-            <a href="{{ url('pengguna/add') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
+            <a href="{{ url('/dashboard/pengguna/create') }}" class="btn btn-primary"> <i class="fas fa-plus"></i> Tambah Data</a>
         </div>
         <div class="card-body">
             <table id="table1" class="table table-bordered table-hover">
@@ -32,14 +32,18 @@
                     @foreach ($data as $item)
                         <tr>
                             <td class="text-center">{{ $loop->iteration }}</td>
-                            <td>{{ $item->nama_lengkap }}</td>
+                            <td>{{ $item->name }}</td>
                             <td>{{ $item->email }}</td>
-                            <td>{{ $item->nama_role }}</td>
+                            <td>{{ $item->role }}</td>
                             <td class="text-center">
-                                <a href="{{ url('pengguna/edit/' . $item->id) }}" class="btn btn-sm btn-warning"
-                                    title="Edit"><i class="fas fa-edit"></i></a>
-                                <button onclick="del({{ $item->id }})" class="btn btn-sm btn-danger" title="Hapus">
-                                    <i class="fas fa-trash"></i></button>
+                                <a href="{{ url('/dashboard/pengguna/' . $item->id . '/edit') }}" class="btn btn-xs btn-warning"
+                                    title="Edit"><i class="fas fa-edit"></i>
+                                </a>
+                                <form id="delete-form-{{ $item->id }}" action="{{ url('/dashboard/pengguna/' . $item->id) }}" method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                                <button onclick="del({{ $item->id }})" class="btn btn-xs btn-danger" title="Hapus"><i class="fas fa-trash"></i></button>
                             </td>
                         </tr>
                     @endforeach
@@ -119,7 +123,7 @@
                 cancelButtonText: 'Batal'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "{{ url('pengguna/pengguna/delete') }}/" + id;
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }
