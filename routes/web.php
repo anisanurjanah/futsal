@@ -26,8 +26,9 @@ use App\Http\Controllers\PembayaranDetailController;
 Route::get('/', [HomeController::class, 'index'])->middleware('guest')->name('home');
 
 Route::get('/reservasi', [HomeController::class, 'showReservasi'])->name('reservasi');
-Route::get('/reservasi/success', [HomeController::class, 'showDetailReservasi'])->name('detail_reservasi');
-Route::post('/reservasi/add', [HomeController::class, 'storeReservasi'])->name('reservasi/add');
+Route::get('/reservasi/{order_id}', [HomeController::class, 'showDetailReservasi'])->name('detail_reservasi');
+
+Route::post('/reservasi/pembayaran', [HomeController::class, 'storeReservasi'])->name('reservasi/pembayaran');
 
 Route::post('/cek-jadwal', [HomeController::class, 'getAvailableWaktu']);
 

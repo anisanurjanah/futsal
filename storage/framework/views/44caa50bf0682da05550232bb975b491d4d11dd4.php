@@ -13,44 +13,52 @@
                             <h3 class="card-title">Reservasi Lapangan</h3>
                         </div>
                         <div class="card-body p-4">
-                            <form action="<?php echo e(route('reservasi/add')); ?>" method="POST" id="reservasiForm">
-                                <?php echo csrf_field(); ?>
+                            <div class="row justify-content-center py-3">
+                                <h1 class="text-center">FIT PLAZA</h1>
+                            </div>
 
+                            <form action="<?php echo e(route('reservasi/pembayaran')); ?>" method="POST" id="reservasiForm">
+                                <?php echo csrf_field(); ?>
                                 <div class="album">
                                     <div class="container">
                                         <h5 class="mb-4">Lapangan</h5>
 
                                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                                        <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="col">
-                                                <label class="d-block bg-body-tertiary bg-gradient text-center rounded py-4 lapangan-option">
-                                                    <input type="radio"
-                                                        id="lapangan<?php echo e($lap->id); ?>"
-                                                        name="lapangan_id"
-                                                        value="<?php echo e($lap->id); ?>"
-                                                        class="form-check-input d-none">
+                                            <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="col">
+                                                    <label class="d-block bg-body-tertiary bg-gradient text-center rounded py-4 lapangan-option" style="cursor: pointer;">
+                                                        <input type="radio"
+                                                            id="lapangan<?php echo e($lap->id); ?>"
+                                                            name="lapangan_id"
+                                                            value="<?php echo e($lap->id); ?>"
+                                                            class="form-check-input d-none">
 
-                                                    <p class="m-0"><?php echo e($lap->name); ?></p>
-                                                </label>
-                                            </div>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                        <p class="m-0"><?php echo e($lap->name); ?></p>
+                                                    </label>
+                                                </div>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="nama">Nama</label>
+                                    <label for="nama">Nama Lengkap</label>
                                     <input type="text" class="form-control" id="nama" name="nama" required>
                                 </div>
                                 
-                                <div class="form-group mb-3">
-                                    <label for="nomor_telepon">Nomor Telepon</label>
-                                    <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" required>
-                                </div>
-
-                                <div class="form-group mb-3">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" id="email" name="email" required>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="nomor_telepon">Nomor Telepon</label>
+                                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-3">
@@ -58,36 +66,38 @@
                                     <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                                 </div>
 
-                                <div class="form-group mb-3">
-                                    <label for="waktu_mulai">Waktu Mulai</label>
-                                    <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
-                                        <option value="">Pilih Waktu Mulai</option>
-                                        <?php for($i = 1; $i <= 24; $i++): ?>
-                                            <?php if($i < 10): ?>
-                                                <option value="0<?php echo e($i); ?>:00:00">0<?php echo e($i); ?>:00</option>
-                                            <?php else: ?>
-                                                <option value="<?php echo e($i); ?>:00:00"><?php echo e($i); ?>:00</option>
-                                            <?php endif; ?>
-                                        <?php endfor; ?>
-                                    </select>
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 g-4">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="waktu_mulai">Waktu Mulai</label>
+                                            <select name="waktu_mulai" id="waktu_mulai" class="form-control" required>
+                                                <option value="">Pilih Waktu Mulai</option>
+                                                <?php for($i = 10; $i <= 20; $i++): ?>
+                                                    <option value="<?php echo e(str_pad($i, 2, '0', STR_PAD_LEFT)); ?>:00:00">
+                                                        <?php echo e(str_pad($i, 2, '0', STR_PAD_LEFT)); ?>:00
+                                                    </option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label for="waktu_selesai">Waktu Selesai</label>
+                                            <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
+                                                <option value="">Pilih Waktu Selesai</option>
+                                                <?php for($i = 11; $i <= 21; $i++): ?>
+                                                    <option value="<?php echo e(str_pad($i, 2, '0', STR_PAD_LEFT)); ?>:00:00">
+                                                        <?php echo e(str_pad($i, 2, '0', STR_PAD_LEFT)); ?>:00
+                                                    </option>
+                                                <?php endfor; ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="form-group mb-3">
-                                    <label for="waktu_selesai">Waktu Selesai</label>
-                                    <select name="waktu_selesai" id="waktu_selesai" class="form-control" required>
-                                        <option value="">Pilih Waktu Selesai</option>
-                                        <?php for($i = 1; $i <= 24; $i++): ?>
-                                            <?php if($i < 10): ?>
-                                                <option value="0<?php echo e($i); ?>:00:00">0<?php echo e($i); ?>:00</option>
-                                            <?php else: ?>
-                                                <option value="<?php echo e($i); ?>:00:00"><?php echo e($i); ?>:00</option>
-                                            <?php endif; ?>
-                                        <?php endfor; ?>
-                                    </select>
-                                </div>
-                                <div class="form-group mb-3">
                                     <label class="d-block">Pembayaran</label>
-                                    <div class="d-flex flex-wrap gap-3">
+                                    <div class="p-2 gap-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="radio" name="tipe_pembayaran"
                                                 id="tipe_dp" value="dp" required>
@@ -104,15 +114,20 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="total">Total</label>
                                     <input type="text" class="form-control" id="total" name="total" value="Rp 0" readonly disabled>
                                 </div>
+
                                 <div class="form-group d-none" id="dp_wrapper">
                                     <label for="harga_dp">Harga DP (50%)</label>
                                     <input type="text" class="form-control" id="harga_dp" value="Rp 0" readonly disabled>
                                 </div>
-                                <button type="submit" class="btn btn-primary">Buat Reservasi</button>
+
+                                <div class="d-flex justify-content-end py-3">
+                                    <button type="submit" class="btn btn-primary">Buat Reservasi</button>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -139,12 +154,14 @@
 
             if (tanggal) {
                 tanggalInput.value = tanggal;
+                sessionStorage.removeItem('tanggalReservasi');
             }
 
             if (lapanganId) {
                 document.querySelectorAll('input[name="lapangan_id"]').forEach(input => {
                     if (input.value === lapanganId) {
                         input.checked = true;
+                        fetchAvailableTimes()
 
                         document.querySelectorAll('.lapangan-option').forEach(el => {
                             el.classList.remove('border', 'border-dark', 'shadow');
@@ -153,13 +170,15 @@
                         input.closest('.lapangan-option')?.classList.add('border', 'border-dark', 'shadow');
 
                         input.dispatchEvent(new Event('change', { bubbles: true }));
+
+                        sessionStorage.removeItem('lapanganId');
                     }
                 });
             }
 
             document.querySelectorAll('.lapangan-option input[type="radio"]').forEach(input => {
                 input.addEventListener('change', function () {
-                    sessionStorage.setItem('lapanganId', this.value);
+                    fetchAvailableTimes()
 
                     document.querySelectorAll('.lapangan-option').forEach(el => {
                         el.classList.remove('border', 'border-dark', 'shadow');
@@ -173,6 +192,21 @@
             if (tanggalInput.value && document.querySelector('input[name="lapangan_id"]:checked')) {
                 fetchAvailableTimes();
             }
+
+            tanggalInput.addEventListener('change', function() {
+                fetchAvailableTimes();
+            });
+
+            // Event listener untuk waktu
+            waktuMulai.addEventListener('change', hitungTotalHarga);
+            waktuSelesai.addEventListener('change', function() {
+                validateTime();
+                hitungTotalHarga();
+            });
+
+            document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
+                input.addEventListener('change', hitungTotalHarga);
+            });
 
             // Fungsi untuk memfilter opsi waktu selesai
             function filterWaktuSelesai() {
@@ -256,10 +290,19 @@
                     waktuMulai.innerHTML = '<option value="">Pilih Waktu Mulai</option>';
                     waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
 
-                    data.forEach(jam => {
+                    const waktuTersedia = data.map(item => item.jam);
+                    const waktuTerisi = data.filter(item => item.disabled).map(item => item.jam);
+
+                    data.forEach(item => {
                         const option = document.createElement('option');
-                        option.value = jam;
-                        option.textContent = jam.substring(0, 5);
+                        option.value = item.jam;
+                        option.textContent = item.jam.substring(0, 5);
+
+                        if (item.disabled) {
+                            option.disabled = true;
+                            option.textContent += ' (Terisi)';
+                        }
+
                         waktuMulai.appendChild(option);
                     });
 
@@ -267,12 +310,26 @@
                         const selectedHour = parseInt(this.value.split(':')[0]);
                         waktuSelesai.innerHTML = '<option value="">Pilih Waktu Selesai</option>';
 
-                        for (let i = selectedHour + 1; i <= 21; i++) {
-                            const jam = `${i.toString().padStart(2, '0')}:00:00`;
-                            const option = document.createElement('option');
-                            option.value = jam;
-                            option.textContent = jam.substring(0, 5);
-                            waktuSelesai.appendChild(option);
+                        for (let i = selectedHour + 1; i <= 20; i++) {
+                            const jamMulai = selectedHour;
+                            const jamSelesai = i;
+                            let konflik = false;
+
+                            for (let jam = jamMulai; jam < jamSelesai; jam++) {
+                                const jamCheck = `${jam.toString().padStart(2, '0')}:00:00`;
+                                if (waktuTerisi.includes(jamCheck)) {
+                                    konflik = true;
+                                    break;
+                                }
+                            }
+
+                            if (!konflik) {
+                                const jam = `${jamSelesai.toString().padStart(2, '0')}:00:00`;
+                                const option = document.createElement('option');
+                                option.value = jam;
+                                option.textContent = jam.substring(0, 5);
+                                waktuSelesai.appendChild(option);
+                            }
                         }
                     })
                 })
@@ -314,21 +371,6 @@
                 }
             }
 
-            // Event listener untuk waktu mulai
-            // waktuMulai.addEventListener('change', function() {
-            //     filterWaktuSelesai();
-            // });
-
-            // Event listener untuk waktu selesai
-            waktuSelesai.addEventListener('change', validateTime);
-
-            document.getElementById('waktu_mulai').addEventListener('change', hitungTotalHarga);
-            document.getElementById('waktu_selesai').addEventListener('change', hitungTotalHarga);
-
-            document.querySelectorAll('input[name="tipe_pembayaran"]').forEach(input => {
-                input.addEventListener('change', hitungTotalHarga);
-            });
-
             // Event listener untuk form submission
             form.addEventListener('submit', function(e) {
                 const validTime = validateTime();
@@ -343,7 +385,6 @@
             });
         });
     </script>
-    
     <script>
         <?php if(session('add_gagal')): ?>
             Swal.fire({

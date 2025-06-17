@@ -38,31 +38,12 @@ class HomeController extends Controller
         ]);
     }
 
-    // public function showHome()
-    // {
-    //     // $data = DB::table('tbl_reservasi')->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')->where('status', '=', 'Lunas')->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')->get();
-    //     $data = DB::table('tbl_reservasi')
-    //         ->select('tbl_reservasi.tanggal', 'tbl_reservasi.waktu_mulai', 'tbl_reservasi.waktu_selesai', 'tbl_lapangan.namalapangan as namalapangan')
-    //         ->where('status', '=', 'Lunas')
-    //         ->join('tbl_lapangan', 'tbl_reservasi.id_lapangan', '=', 'tbl_lapangan.id')
-    //         ->get();
-
-    //     return view('home.home', compact('data'));
-    // }
-
     public function showReservasi()
     {
         return view('home.reservasi', [
             'lapangan' => Lapangan::all()
         ]);
     }
-
-    // public function showReservasi()
-    // {
-    //     $tipeLapangan = DB::table('tbl_lapangan')->get();
-
-    //     return view('home.reservasi', compact('tipeLapangan'));
-    // }
 
     public function getAvailableWaktu(Request $request)
     {
@@ -85,14 +66,19 @@ class HomeController extends Controller
             $start = (int) explode(':', $res->waktu_mulai)[0];
             $end = (int) explode(':', $res->waktu_selesai)[0];
 
-            for ($i = $start; $i <= $end; $i++) {
+            for ($i = $start; $i < $end; $i++) {
                 $waktuTerpakai[] = sprintf('%02d:00:00', $i);
             }
         }
 
-        $waktuTersedia = $waktuReservasi->diff($waktuTerpakai)->values();
+        $hasil = $waktuReservasi->map(function ($jam) use ($waktuTerpakai) {
+            return [
+                'jam' => $jam,
+                'disabled' => in_array($jam, $waktuTerpakai),
+            ];
+        });
 
-        return response()->json($waktuTersedia);
+        return response()->json($hasil);
     }
 
     public function storeReservasi(Request $request)
@@ -223,13 +209,20 @@ class HomeController extends Controller
                 'phone' => $phone,
             ],
             'enabled_payments' => ['gopay', 'bank_transfer', 'qris'],
+            'expiry' => [
+                'start_time' => date("Y-m-d H:i:s O"),
+                'unit' => 'minute',
+                'duration' => 5
+            ]
         ];
 
         return Snap::getSnapToken($params);
     }
     
-    public function showDetailReservasi()
+    public function showDetailReservasi($order_id)
     {
-        return view('home.detail_reservasi');
+        $reservasi = Reservasi::with('lapangan', 'pelanggan', 'pembayaran.pembayaranDetail')->where('order_id', $order_id)->firstOrFail();
+
+        return view('home.detail_reservasi', compact('reservasi'));
     }
 }

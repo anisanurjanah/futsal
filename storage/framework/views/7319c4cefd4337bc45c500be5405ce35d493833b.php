@@ -16,14 +16,14 @@
                                         <h5 class="mb-4">Pilih Lapangan</h5>
 
                                         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
-                                        <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                            <div class="col">
-                                                <label class="d-block bg-body-secondary bg-gradient text-center rounded p-5 lapangan-option">
-                                                    <input type="radio" name="lapangan_id" value="<?php echo e($lap->id); ?>" class="form-check-input d-none">
-                                                    <h5 class="fw-bold m-0"><?php echo e($lap->name); ?></h5>
-                                                </label>
-                                            </div>
-                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                            <?php $__currentLoopData = $lapangan; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $lap): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                                <div class="col">
+                                                    <label class="d-block bg-body-secondary bg-gradient text-center rounded p-5 lapangan-option" style="cursor: pointer;">
+                                                        <input type="radio" name="lapangan_id" value="<?php echo e($lap->id); ?>" class="form-check-input d-none">
+                                                        <h5 class="fw-bold m-0"><?php echo e($lap->name); ?></h5>
+                                                    </label>
+                                                </div>
+                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -284,8 +284,8 @@
                 themeSystem: 'bootstrap',
                 //Random default events
                 events: [],
-                editable: true,
-                droppable: true, // this allows things to be dropped onto the calendar !!!
+                editable: false,
+                droppable: false, // this allows things to be dropped onto the calendar !!!
                 drop: function(info) {
                     // is the "remove after drop" checkbox checked?
                     if (checkbox && checkbox.checked) {
@@ -298,10 +298,11 @@
 
                     sessionStorage.setItem('tanggalReservasi', info.dateStr);
                     sessionStorage.setItem('lapanganId', lapanganId);
-
-                    console.log(lapanganId)
                     
                     window.location.href = '/reservasi';
+                },
+                dayCellDidMount: function(info) {
+                    info.el.style.cursor = 'pointer';
                 }
             });
 
